@@ -1,0 +1,10 @@
+label {
+  color: var(--chakra-colors-gray-500);
+  font-weight: var(--chakra-fontWeights-medium) !important;
+  font-size: var(--chakra-fontSizes-sm) !important;
+  margin-bottom: 0 !important;
+}
+
+.chakra-form__error-message {
+  font-size: var(--chakra-fontSizes-xs) !important;
+}

@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+    provider = "postgres"
+    url      = env("DATABASE_URL")
+}
+
+model Vendor {
+    id        Int        @id @default(autoincrement())
+    name      String     @unique
+    url       String?
+    materials Material[]
+}
+
+model StockUnit {
+    id           Int        @id @default(autoincrement())
+    nameSingular String     @unique
+    namePlural   String     @unique
+    category     String
+    materials    Material[]
+    products     Product[]
+}
+
+model Material {
+    id          Int        @id @default(autoincrement())
+    name        String
+    url         String
+    categories  Category[]
+    stock       Decimal
+    stockUnit   StockUnit  @relation(fields: [stockUnitId], references: [id])
+    minStock    Decimal
+    costPerUnit Decimal
+    vendor      Vendor     @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    vendorId    Int
+    Product     Product?   @relation(fields: [productId], references: [id])
+    productId   Int?
+    stockUnitId Int
+}
+
+model Category {
+    id         Int       @id @default(autoincrement())
+    name       String    @unique
+    material   Material? @relation(fields: [materialId], references: [id])
+    materialId Int?
+}
+
+model Product {
+    id             Int        @id @default(autoincrement())
+    name           String
+    category       String
+    stock          Decimal
+    stockUnit      StockUnit  @relation(fields: [stockUnitId], references: [id])
+    minStock       Decimal
+    msrp           Decimal
+    wholesalePrice Decimal
+    materials      Material[]
+    stockUnitId    Int
+}
