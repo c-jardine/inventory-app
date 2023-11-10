@@ -1,8 +1,10 @@
 export { default as CategoryInput } from './CategoryInput';
 export { default as MaterialDetailsForm } from './MaterialDetailsForm';
+export { default as MaterialDrawer } from './MaterialDrawer';
+export { default as MaterialLogs } from './MaterialLogs';
 export { default as MaterialsForm } from './MaterialsForm';
 export { default as MaterialsTable } from './MaterialsTable';
 export { default as StockUnitInput } from './StockUnitInput';
+export { default as UpdateStockDrawer } from './UpdateStockDrawer';
 export { default as UpdateStockForm } from './UpdateStockForm';
-export { default as UpdateStockPopover } from './UpdateStockPopover';
 export { default as VendorInput } from './VendorInput';

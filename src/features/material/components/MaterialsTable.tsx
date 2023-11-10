@@ -13,7 +13,8 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { type Material } from '@prisma/client';
-import UpdateStockPopover from './UpdateStockPopover';
+import UpdateStockDrawer from './UpdateStockDrawer';
+import MaterialDrawer from './MaterialDrawer';
 
 export default function MaterialsTable() {
   const { data, isLoading } = api.material.getAll.useQuery();
@@ -55,16 +56,12 @@ export default function MaterialsTable() {
         <Tbody>
           {data.map((material) => (
             <Tr key={material.id}>
-              <Td
-                fontSize='md'
-                fontWeight='semibold'
-                color={isLowStock(material) ? 'red.500' : 'black'}
-              >
-                {material.name}
+              <Td>
+                <MaterialDrawer {...material} />
               </Td>
 
               <Td>
-                <UpdateStockPopover {...material} />
+                <UpdateStockDrawer {...material} />
               </Td>
 
               <Td fontSize='xs'>

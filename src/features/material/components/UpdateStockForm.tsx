@@ -17,7 +17,7 @@ import { type inferRouterOutputs } from '@trpc/server';
 import { Select } from 'chakra-react-select';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { type UpdateStockFormType } from './UpdateStockPopover';
+import { type UpdateStockFormType } from './UpdateStockDrawer';
 
 type StockLogTypeOption = {
   readonly label: string;

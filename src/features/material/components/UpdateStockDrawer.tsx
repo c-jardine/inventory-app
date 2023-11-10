@@ -21,7 +21,6 @@ import { z } from 'zod';
 import UpdateStockForm from './UpdateStockForm';
 
 const schema = z.object({
-  material: z.number(),
   logType: z.string(),
   stock: z.number(),
   notes: z.string().optional(),
@@ -29,15 +28,12 @@ const schema = z.object({
 
 export type UpdateStockFormType = z.infer<typeof schema>;
 
-export default function UpdateStockPopover(
+export default function UpdateStockDrawer(
   props: inferRouterOutputs<AppRouter>['material']['getAll'][0]
 ) {
   const btnRef = React.useRef(null);
 
   const form = useForm<UpdateStockFormType>({
-    defaultValues: {
-      material: props.id,
-    },
     resolver: zodResolver(schema),
   });
 
@@ -58,12 +54,17 @@ export default function UpdateStockPopover(
         status: 'success',
       });
       await utils.material.getAll.invalidate();
+      await utils.materialStockLog.getAllByMaterial.invalidate();
       onClose();
     },
   });
 
   function onSubmit(data: UpdateStockFormType) {
-    query.mutate(data);
+    query.mutate({
+      ...data,
+      material: props.id,
+      prevStock: parseFloat(props.stock.toString()),
+    });
   }
 
   return (
@@ -120,7 +121,7 @@ export default function UpdateStockPopover(
                 <Button
                   type='submit'
                   colorScheme={form.formState.isValid ? 'green' : 'gray'}
-                  isDisabled={!form.formState.isValid}
+                  // isDisabled={!form.formState.isValid}
                 >
                   Save
                 </Button>

@@ -3,13 +3,33 @@ import { z } from 'zod';
 
 export const materialStockLogRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.materialStockLogType.findMany();
+    return ctx.db.materialStockLog.findMany({
+      include: {
+        logType: true,
+      },
+    });
   }),
+  getAllByMaterial: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.materialStockLog.findMany({
+        where: {
+          materialId: input.id,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          logType: true,
+        },
+      });
+    }),
   create: publicProcedure
     .input(
       z.object({
         material: z.number(),
         logType: z.string(),
+        prevStock: z.number(),
         stock: z.number(),
         notes: z.string().optional(),
       })
