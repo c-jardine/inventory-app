@@ -64,6 +64,15 @@ export default function UpdateStockDrawer(
       ...data,
       material: props.id,
       prevStock: parseFloat(props.stock.toString()),
+      stock: (() => {
+        if (form.watch('logType') === 'Supply Order') {
+          return Number(props.stock) + Number(form.watch('stock'));
+        } else if (form.watch('logType') === 'Product Testing') {
+          return Number(props.stock) - Number(form.watch('stock'));
+        } else {
+          return Number(form.watch('stock'));
+        }
+      })(),
     });
   }
 

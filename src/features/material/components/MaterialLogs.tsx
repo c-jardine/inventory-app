@@ -54,29 +54,117 @@ export default function MaterialLogs(
               bg: 'gray.50',
             }}
           >
-            <Text fontSize='sm'>
-              {log.logType.name === 'Supply Order' && (
-                <chakra.span>
-                  You received {Number(log.stock)}{' '}
-                  {props.stockUnit.abbreviationPlural} in a{' '}
-                  <chakra.span fontWeight='semibold'>Supply Order</chakra.span>{' '}
-                  from{' '}
-                  <chakra.span fontWeight='semibold'>
-                    {props.vendor.name}
+            {log.logType.name === 'Supply Order' && (
+              <>
+                <Text fontSize='sm'>
+                  <chakra.span>
+                    You received{' '}
+                    {Number(Number(log.stock) - Number(log.prevStock)).toFixed(
+                      2
+                    )}{' '}
+                    {props.stockUnit.abbreviationPlural} in a{' '}
+                    <chakra.span fontWeight='semibold'>
+                      Supply Order
+                    </chakra.span>{' '}
+                    from{' '}
+                    <chakra.span fontWeight='semibold'>
+                      {props.vendor.name}
+                    </chakra.span>
                   </chakra.span>
-                </chakra.span>
-              )}
-            </Text>
-            <Flex alignItems='center' gap={1}>
-              <Text fontSize='sm'>
-                {Number(log.prevStock)} {props.stockUnit.abbreviationPlural}
-              </Text>
-              <Icon as={IconArrowRight} color='gray.500' w={4} h={4} mt={-0.5} />
-              <Text fontSize='sm' fontWeight='semibold' color='green.500'>
-                {(Number(log.prevStock) + Number(log.stock)).toFixed(2)}{' '}
-                {props.stockUnit.abbreviationPlural} in stock
-              </Text>
-            </Flex>
+                </Text>
+                <Flex alignItems='center' gap={1}>
+                  <Text fontSize='sm'>
+                    {Number(log.prevStock)} {props.stockUnit.abbreviationPlural}
+                  </Text>
+                  <Icon
+                    as={IconArrowRight}
+                    color='gray.500'
+                    w={4}
+                    h={4}
+                    mt={-0.5}
+                  />
+                  <Text fontSize='sm' fontWeight='semibold' color='green.500'>
+                    {Number(log.stock).toFixed(2)}{' '}
+                    {props.stockUnit.abbreviationPlural} in stock
+                  </Text>
+                </Flex>
+              </>
+            )}
+
+            {log.logType.name === 'Audit' && (
+              <>
+                <Text fontSize='sm'>
+                  <chakra.span>
+                    You{' '}
+                    {Number(log.prevStock) < Number(log.stock)
+                      ? 'added'
+                      : 'removed'}{' '}
+                    {Math.abs(
+                      Number(Number(log.stock) - Number(log.prevStock))
+                    ).toFixed(2)}{' '}
+                    {props.stockUnit.abbreviationPlural} in an{' '}
+                    <chakra.span fontWeight='semibold'>audit</chakra.span>
+                  </chakra.span>
+                </Text>
+                <Flex alignItems='center' gap={1}>
+                  <Text fontSize='sm'>
+                    {Number(log.prevStock)} {props.stockUnit.abbreviationPlural}
+                  </Text>
+                  <Icon
+                    as={IconArrowRight}
+                    color='gray.500'
+                    w={4}
+                    h={4}
+                    mt={-0.5}
+                  />
+                  <Text
+                    fontSize='sm'
+                    fontWeight='semibold'
+                    color={
+                      Number(log.prevStock) < Number(log.stock)
+                        ? 'green.500'
+                        : 'red.500'
+                    }
+                  >
+                    {Number(log.stock).toFixed(2)}{' '}
+                    {props.stockUnit.abbreviationPlural} in stock
+                  </Text>
+                </Flex>
+              </>
+            )}
+
+            {log.logType.name === 'Product Testing' && (
+              <>
+                <Text fontSize='sm'>
+                  <chakra.span>
+                    You used{' '}
+                    {Math.abs(
+                      Number(Number(log.stock) - Number(log.prevStock))
+                    ).toFixed(2)}{' '}
+                    {props.stockUnit.abbreviationPlural} in{' '}
+                    <chakra.span fontWeight='semibold'>
+                      product testing
+                    </chakra.span>
+                  </chakra.span>
+                </Text>
+                <Flex alignItems='center' gap={1}>
+                  <Text fontSize='sm'>
+                    {Number(log.prevStock)} {props.stockUnit.abbreviationPlural}
+                  </Text>
+                  <Icon
+                    as={IconArrowRight}
+                    color='gray.500'
+                    w={4}
+                    h={4}
+                    mt={-0.5}
+                  />
+                  <Text fontSize='sm' fontWeight='semibold' color='red.500'>
+                    {Number(log.stock).toFixed(2)}{' '}
+                    {props.stockUnit.abbreviationPlural} in stock
+                  </Text>
+                </Flex>
+              </>
+            )}
 
             <Text mt={1} fontSize='xs' color='gray.500'>
               {isMoreThanXDaysAway(7, log.createdAt)

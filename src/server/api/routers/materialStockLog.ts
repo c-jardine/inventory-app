@@ -56,9 +56,7 @@ export const materialStockLogRouter = createTRPCRouter({
             id: input.material,
           },
           data: {
-            stock: {
-              increment: input.stock,
-            },
+            stock: input.stock,
           },
         }),
       ]);

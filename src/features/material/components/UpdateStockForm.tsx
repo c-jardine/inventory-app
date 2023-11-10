@@ -47,6 +47,32 @@ export default function UpdateStockForm(
     }
   }, [resetField, logTypes]);
 
+  function getStockLabel() {
+    switch (watch('logType')) {
+      case 'Supply Order':
+        return 'Quantity';
+      case 'Audit':
+        return 'Quantity';
+      case 'Product Testing':
+        return 'Quantity Used';
+      default:
+        return 'Quantity';
+    }
+  }
+
+  function getStockLevel() {
+    switch (watch('logType')) {
+      case 'Supply Order':
+        return (Number(props.stock) + watch('stock')).toFixed(2);
+      case 'Audit':
+        return watch('stock').toFixed(2);
+      case 'Product Testing':
+        return (Number(props.stock) - watch('stock')).toFixed(2);
+      default:
+        return watch('stock').toFixed(2);
+    }
+  }
+
   return (
     <Stack spacing={4}>
       <FormControl isInvalid={!!formState.errors.logType}>
@@ -122,7 +148,7 @@ export default function UpdateStockForm(
         )}
       </FormControl>
       <FormControl isInvalid={!!formState.errors.stock}>
-        <KFormLabel>Quantity</KFormLabel>
+        <KFormLabel>{getStockLabel()}</KFormLabel>
         <NumberInput>
           <NumberInputField
             placeholder='0'
@@ -143,9 +169,7 @@ export default function UpdateStockForm(
               : props.stockUnit.abbreviationPlural}
           </chakra.span>
           <Icon as={IconArrowRight} />
-          {!isNaN(watch('stock'))
-            ? (Number(props.stock) + watch('stock')).toFixed(2)
-            : Number(props.stock)}{' '}
+          {!isNaN(watch('stock')) && getStockLevel()}{' '}
           {Number(props.stock) === 1
             ? props.stockUnit.abbreviationSingular
             : props.stockUnit.abbreviationPlural}
