@@ -13,16 +13,20 @@ import {
   DrawerOverlay,
   Flex,
   Heading,
+  Icon,
+  Link,
   SimpleGrid,
   Stack,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { type Material } from '@prisma/client';
+import { IconExternalLink } from '@tabler/icons-react';
 import { type inferRouterOutputs } from '@trpc/server';
 import { format, formatDistanceToNow } from 'date-fns';
 import React from 'react';
 import MaterialLogs from './MaterialLogs';
+import MaterialOptionsMenu from './MaterialOptionsMenu';
 
 export default function MaterialDrawer(
   props: inferRouterOutputs<AppRouter>['material']['getAll'][0]
@@ -104,8 +108,34 @@ export default function MaterialDrawer(
               </SimpleGrid>
               <Box fontSize='sm'>
                 <Text color='gray.500'>Vendor</Text>
-                <Text>{props.vendor.name}</Text>
+                {props.vendor.url ? (
+                  <Link
+                    role='group'
+                    href={props.vendor.url}
+                    target='_blank'
+                    display='flex'
+                    gap={1}
+                    transition='200ms ease'
+                  >
+                    {props.vendor.name}
+                    <Icon
+                      as={IconExternalLink}
+                      color='gray.500'
+                      _groupHover={{
+                        color: 'black',
+                      }}
+                    />
+                  </Link>
+                ) : (
+                  <Text>{props.vendor.name}</Text>
+                )}
               </Box>
+            </Stack>
+            <Stack direction='row' spacing={4} mt={8}>
+              <Button variant='outline' w='fit-content'>
+                Edit Details
+              </Button>
+              <MaterialOptionsMenu {...props} />
             </Stack>
             <Stack spacing={4} mt={8}>
               <Heading

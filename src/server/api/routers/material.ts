@@ -65,13 +65,13 @@ export const materialRouter = createTRPCRouter({
         },
       });
     }),
-  // delete: publicProcedure
-  //   .input(z.object({ name: z.string() }))
-  //   .mutation(async ({ ctx, input }) => {
-  //     return ctx.db.material.delete({
-  //       where: {
-  //         name: input.name,
-  //       },
-  //     });
-  //   }),
+  delete: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.material.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
