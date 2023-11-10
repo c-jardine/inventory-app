@@ -13,6 +13,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { type Material } from '@prisma/client';
+import UpdateStockPopover from './UpdateStockPopover';
 
 export default function MaterialsTable() {
   const { data, isLoading } = api.material.getAll.useQuery();
@@ -61,16 +62,11 @@ export default function MaterialsTable() {
               >
                 {material.name}
               </Td>
-              <Td
-                fontSize='xs'
-                fontWeight={isLowStock(material) ? 'semibold' : 'normal'}
-                color={isLowStock(material) ? 'red.500' : 'black'}
-              >
-                {Number(material.stock)}{' '}
-                {Number(material.stock) === 1
-                  ? material.stockUnit.nameSingular
-                  : material.stockUnit.namePlural}
+
+              <Td>
+                <UpdateStockPopover {...material} />
               </Td>
+
               <Td fontSize='xs'>
                 {Number(material.minStock)}{' '}
                 {Number(material.minStock) === 1

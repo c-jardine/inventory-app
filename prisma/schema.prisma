@@ -19,35 +19,56 @@ model Vendor {
 }
 
 model StockUnit {
-    id           Int        @id @default(autoincrement())
-    nameSingular String     @unique
-    namePlural   String     @unique
-    category     String
-    materials    Material[]
-    products     Product[]
+    id                   Int        @id @default(autoincrement())
+    nameSingular         String     @unique
+    namePlural           String     @unique
+    abbreviationSingular String     @unique
+    abbreviationPlural   String     @unique
+    category             String
+    materials            Material[]
+    products             Product[]
 }
 
 model Material {
-    id          Int        @id @default(autoincrement())
+    id          Int                @id @default(autoincrement())
     name        String
     url         String
     categories  Category[]
     stock       Decimal
-    stockUnit   StockUnit  @relation(fields: [stockUnitId], references: [id])
+    stockUnit   StockUnit          @relation(fields: [stockUnitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     minStock    Decimal
     costPerUnit Decimal
-    vendor      Vendor     @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    vendor      Vendor             @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     vendorId    Int
-    Product     Product?   @relation(fields: [productId], references: [id])
+    product     Product?           @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     productId   Int?
     stockUnitId Int
+    stockLogs   MaterialStockLog[]
+    createdAt   DateTime           @default(now())
 }
 
 model Category {
     id         Int       @id @default(autoincrement())
     name       String    @unique
-    material   Material? @relation(fields: [materialId], references: [id])
+    material   Material? @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     materialId Int?
+}
+
+model MaterialStockLogType {
+    id   Int                @id @default(autoincrement())
+    name String             @unique
+    logs MaterialStockLog[]
+}
+
+model MaterialStockLog {
+    id         Int                  @id @default(autoincrement())
+    material   Material             @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    materialId Int
+    logType    MaterialStockLogType @relation(fields: [logTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    logTypeId  Int
+    stock      Int
+    notes      String?
+    createdAt  DateTime             @default(now())
 }
 
 model Product {
@@ -55,7 +76,7 @@ model Product {
     name           String
     category       String
     stock          Decimal
-    stockUnit      StockUnit  @relation(fields: [stockUnitId], references: [id])
+    stockUnit      StockUnit  @relation(fields: [stockUnitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     minStock       Decimal
     msrp           Decimal
     wholesalePrice Decimal

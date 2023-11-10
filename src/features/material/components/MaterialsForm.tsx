@@ -64,15 +64,13 @@ export default function MaterialsForm() {
 
   const utils = api.useUtils();
   const query = api.material.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast({
-        title: 'Material created',
-        description: `Created the material: ${data.name}`,
+        title: data.name,
+        description: `Material successfully created.`,
         status: 'success',
       });
       onClose();
-    },
-    onSettled: async () => {
       await utils.material.getAll.invalidate();
     },
   });

@@ -1,7 +1,6 @@
 import { MaterialsForm, MaterialsTable } from '@/features/material';
 import { poppins } from '@/styles/theme';
 import {
-  Box,
   Container,
   Flex,
   Heading,

@@ -2,6 +2,8 @@ import { vendorRouter } from '@/server/api/routers/vendor';
 import { createTRPCRouter } from '@/server/api/trpc';
 import { categoryRouter } from './routers/category';
 import { materialRouter } from './routers/material';
+import { materialStockLogRouter } from './routers/materialStockLog';
+import { materialStockLogTypeRouter } from './routers/materialStockLogType';
 import { stockUnitRouter } from './routers/stockUnit';
 
 /**
@@ -12,6 +14,8 @@ import { stockUnitRouter } from './routers/stockUnit';
 export const appRouter = createTRPCRouter({
   category: categoryRouter,
   material: materialRouter,
+  materialStockLog: materialStockLogRouter,
+  materialStockLogType: materialStockLogTypeRouter,
   stockUnit: stockUnitRouter,
   vendor: vendorRouter,
 });
