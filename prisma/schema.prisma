@@ -32,7 +32,7 @@ model StockUnit {
 model Material {
     id          Int                @id @default(autoincrement())
     name        String
-    url         String
+    url         String?
     categories  Category[]
     stock       Decimal
     stockUnit   StockUnit          @relation(fields: [stockUnitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -48,10 +48,10 @@ model Material {
 }
 
 model Category {
-    id         Int       @id @default(autoincrement())
-    name       String    @unique
-    material   Material? @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    materialId Int?
+    id        Int        @id @default(autoincrement())
+    name      String     @unique
+    slug      String     @unique
+    materials Material[]
 }
 
 model MaterialStockLogType {

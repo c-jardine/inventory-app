@@ -98,7 +98,7 @@ export default function MaterialsForm() {
       >
         <DrawerOverlay />
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit, (data) => console.error(data))}>
             <DrawerContent>
               <DrawerCloseButton />
               <DrawerHeader>Create new material</DrawerHeader>

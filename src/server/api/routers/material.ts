@@ -7,7 +7,7 @@ export const materialRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.material.findMany({
       orderBy: {
-        name: 'asc'
+        name: 'asc',
       },
       include: {
         stockUnit: true,

@@ -1,5 +1,4 @@
 import { isMoreThanXDaysAway } from '@/core';
-import { type AppRouter } from '@/server/api/root';
 import { poppins } from '@/styles/theme';
 import {
   Badge,
@@ -20,16 +19,24 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { type Material } from '@prisma/client';
+import {
+  type Category,
+  type Material,
+  type StockUnit,
+  type Vendor,
+} from '@prisma/client';
 import { IconExternalLink } from '@tabler/icons-react';
-import { type inferRouterOutputs } from '@trpc/server';
 import { format, formatDistanceToNow } from 'date-fns';
 import React from 'react';
 import MaterialLogs from './MaterialLogs';
 import MaterialOptionsMenu from './MaterialOptionsMenu';
 
 export default function MaterialDrawer(
-  props: inferRouterOutputs<AppRouter>['material']['getAll'][0]
+  props: Material & {
+    stockUnit: StockUnit;
+    vendor: Vendor;
+    categories: Category[];
+  }
 ) {
   const btnRef = React.useRef(null);
 

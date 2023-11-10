@@ -12,9 +12,8 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { type Material } from '@prisma/client';
-import UpdateStockDrawer from './UpdateStockDrawer';
 import MaterialDrawer from './MaterialDrawer';
+import UpdateStockDrawer from './UpdateStockDrawer';
 
 export default function MaterialsTable() {
   const { data, isLoading } = api.material.getAll.useQuery();
@@ -29,10 +28,6 @@ export default function MaterialsTable() {
 
   if (!data) {
     return <Text>No materials to show.</Text>;
-  }
-
-  function isLowStock(material: Material) {
-    return Number(material.stock) < Number(material.minStock);
   }
 
   return (

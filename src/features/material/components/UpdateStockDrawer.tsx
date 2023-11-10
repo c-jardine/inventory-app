@@ -55,6 +55,7 @@ export default function UpdateStockDrawer(
       });
       await utils.material.getAll.invalidate();
       await utils.materialStockLog.getAllByMaterial.invalidate();
+      await utils.category.getBySlug.invalidate();
       onClose();
     },
   });
