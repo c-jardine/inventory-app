@@ -21,7 +21,7 @@ import {
   type OptionProps,
 } from 'chakra-react-select';
 import { Controller, useFormContext } from 'react-hook-form';
-import { type MaterialsForm } from './MaterialsForm';
+import { type MaterialFormType } from '../types';
 
 type VendorOption = {
   __isNew__?: boolean;
@@ -30,7 +30,7 @@ type VendorOption = {
 };
 
 export default function VendorInput() {
-  const form = useFormContext<MaterialsForm>();
+  const form = useFormContext<MaterialFormType>();
 
   const utils = api.useUtils();
   const { data } = api.vendor.getAll.useQuery();

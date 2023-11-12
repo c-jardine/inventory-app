@@ -1,4 +1,4 @@
-import { MaterialsForm, MaterialsTable } from '@/features/material';
+import { MaterialFormDrawer, MaterialsTable } from '@/features/material';
 import { poppins } from '@/styles/theme';
 import {
   Container,
@@ -14,7 +14,7 @@ import { IconSearch } from '@tabler/icons-react';
 
 export default function Materials() {
   return (
-    <Container maxW='container.xl' p={{ base: 4, sm: 8 }}>
+    <Container maxW='container.xl' w='full' p={{ base: 4, sm: 8 }}>
       <SimpleGrid
         gridTemplateColumns={{ base: '1fr', lg: '1fr 1fr 1fr' }}
         mb={8}
@@ -37,7 +37,7 @@ export default function Materials() {
           </InputGroup>
         </Flex>
         <Flex justifyContent='flex-end'>
-          <MaterialsForm />
+          <MaterialFormDrawer />
         </Flex>
       </SimpleGrid>
       <MaterialsTable />

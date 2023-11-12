@@ -2,7 +2,7 @@ import { KFormLabel } from '@/core';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { Controller, useFormContext } from 'react-hook-form';
-import { type MaterialsForm } from './MaterialsForm';
+import { type MaterialFormDrawer } from './MaterialFormDrawer';
 
 type UnitOption = {
   readonly label: string;
@@ -62,7 +62,7 @@ const options: readonly GroupOption[] = [
 ];
 
 export default function StockUnitInput() {
-  const form = useFormContext<MaterialsForm>();
+  const form = useFormContext<MaterialFormDrawer>();
 
   return (
     <FormControl

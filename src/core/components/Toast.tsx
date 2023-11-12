@@ -14,7 +14,7 @@ export const toastOptions: ToastProviderProps = {
 
 export default function Toast(props: UseToastOptions) {
   return (
-    <Box p={4} rounded='sm' borderWidth={1} shadow='lg'>
+    <Box p={4} rounded='sm' borderWidth={1} shadow='lg' bg='white'>
       <Text fontWeight='semibold'>{props.title}</Text>
       <Text fontSize='sm' color='gray.600'>
         {props.description}

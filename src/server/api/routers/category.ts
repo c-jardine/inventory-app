@@ -29,8 +29,8 @@ export const categoryRouter = createTRPCRouter({
             include: {
               stockUnit: true,
               vendor: true,
-              categories: true
-            }
+              categories: true,
+            },
           },
         },
       });
@@ -43,6 +43,22 @@ export const categoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.category.create({
+        data: { ...input, slug: slugify(input.name, { lower: true }) },
+      });
+    }),
+  update: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        color: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.category.update({
+        where: {
+          id: input.id,
+        },
         data: { ...input, slug: slugify(input.name, { lower: true }) },
       });
     }),

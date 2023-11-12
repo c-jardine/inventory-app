@@ -1,4 +1,3 @@
-import { Validation } from '@/core';
 import { api } from '@/utils/api';
 import {
   Button,
@@ -17,47 +16,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import MaterialDetailsForm from './MaterialDetailsForm';
+import { materialSchema } from '../schema';
+import { type MaterialFormType } from '../types';
+import MaterialForm from './MaterialForm';
 
-const schema = z.object({
-  name: z.string().min(1, Validation.MIN_CHARS(1)),
-  url: z.union([
-    z.string().url(Validation.VALID_URL).optional(),
-    z.literal(''),
-  ]),
-  stock: z
-    .number({ invalid_type_error: Validation.REQUIRED })
-    .min(0, Validation.NOT_NEGATIVE),
-  stockUnit: z.string(),
-  minStock: z
-    .union([
-      z
-        .number({ invalid_type_error: Validation.REQUIRED })
-        .min(0, Validation.NOT_NEGATIVE),
-      z.nan(),
-    ])
-    .optional(),
-  costPerUnit: z
-    .number({ invalid_type_error: Validation.REQUIRED })
-    .min(0, Validation.NOT_NEGATIVE),
-  vendor: z.string(),
-  categories: z.string().array().optional(),
-});
-
-export type MaterialsForm = z.infer<typeof schema>;
-
-export default function MaterialsForm() {
+export default function MaterialFormDrawer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef(null);
 
-  const form = useForm<MaterialsForm>({
+  const form = useForm<MaterialFormType>({
     defaultValues: {
       stock: 0,
       minStock: 0,
       costPerUnit: 0,
     },
-    resolver: zodResolver(schema),
+    resolver: zodResolver(materialSchema),
   });
 
   const toast = useToast();
@@ -75,7 +48,7 @@ export default function MaterialsForm() {
     },
   });
 
-  function onSubmit(data: MaterialsForm) {
+  function onSubmit(data: MaterialFormType) {
     query.mutate(data);
   }
 
@@ -98,12 +71,16 @@ export default function MaterialsForm() {
       >
         <DrawerOverlay />
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, (data) => console.error(data))}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (data) =>
+              console.error(data)
+            )}
+          >
             <DrawerContent>
               <DrawerCloseButton />
               <DrawerHeader>Create new material</DrawerHeader>
               <DrawerBody>
-                <MaterialDetailsForm />
+                <MaterialForm />
               </DrawerBody>
               <DrawerFooter>
                 <Button type='submit' colorScheme='green'>

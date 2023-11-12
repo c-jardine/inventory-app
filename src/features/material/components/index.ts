@@ -1,9 +1,11 @@
 export { default as CategoryInput } from './CategoryInput';
-export { default as MaterialDetailsForm } from './MaterialDetailsForm';
-export { default as MaterialDrawer } from './MaterialDrawer';
+export { default as MaterialDetails } from './MaterialDetails';
+export { default as MaterialDetailsDrawer } from './MaterialDetailsDrawer';
+export { default as MaterialDetailsHeader } from './MaterialDetailsHeader';
+export { default as MaterialForm } from './MaterialForm';
+export { default as MaterialFormDrawer } from './MaterialFormDrawer';
 export { default as MaterialLogs } from './MaterialLogs';
 export { default as MaterialOptionsMenu } from './MaterialOptionsMenu';
-export { default as MaterialsForm } from './MaterialsForm';
 export { default as MaterialsTable } from './MaterialsTable';
 export { default as StockUnitInput } from './StockUnitInput';
 export { default as UpdateStockDrawer } from './UpdateStockDrawer';

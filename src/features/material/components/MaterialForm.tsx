@@ -14,13 +14,17 @@ import {
 } from '@chakra-ui/react';
 import { IconCurrencyDollar } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
+import { type MaterialFormType } from '../types';
 import CategoryInput from './CategoryInput';
-import { type MaterialsForm } from './MaterialsForm';
 import StockUnitInput from './StockUnitInput';
 import VendorInput from './VendorInput';
 
-export default function MaterialDetailsForm() {
-  const form = useFormContext<MaterialsForm>();
+export default function MaterialForm({
+  isEditing = false,
+}: {
+  isEditing: boolean;
+}) {
+  const form = useFormContext<MaterialFormType>();
 
   return (
     <Stack spacing={5}>
@@ -53,8 +57,12 @@ export default function MaterialDetailsForm() {
           <NumberInput min={0}>
             <NumberInputField
               {...form.register('stock', { valueAsNumber: true })}
+              disabled={isEditing}
+              _disabled={{
+                bg: 'gray.100',
+              }}
             />
-            <NumberStepper />
+            {!isEditing && <NumberStepper />}
           </NumberInput>
           {form.formState.errors.stock && (
             <FormErrorMessage>
@@ -109,7 +117,11 @@ export default function MaterialDetailsForm() {
           <NumberInput w='full'>
             <NumberInputField
               {...form.register('costPerUnit', { valueAsNumber: true })}
+              disabled={isEditing}
               pl={8}
+              _disabled={{
+                bg: 'gray.100',
+              }}
             />
           </NumberInput>
         </InputGroup>

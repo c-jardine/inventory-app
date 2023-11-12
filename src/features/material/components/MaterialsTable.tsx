@@ -1,6 +1,6 @@
+import { CategoryBadge } from '@/core';
 import { api } from '@/utils/api';
 import {
-  Badge,
   Flex,
   Spinner,
   Table,
@@ -12,7 +12,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import MaterialDrawer from './MaterialDrawer';
+import MaterialDetailsDrawer from './MaterialDetailsDrawer';
 import UpdateStockDrawer from './UpdateStockDrawer';
 
 export default function MaterialsTable() {
@@ -31,7 +31,7 @@ export default function MaterialsTable() {
   }
 
   return (
-    <TableContainer overflowX='unset' overflowY='unset'>
+    <TableContainer overflowX='scroll' overflowY='unset'>
       <Table size='sm'>
         <Thead
           position='sticky'
@@ -52,7 +52,7 @@ export default function MaterialsTable() {
           {data.map((material) => (
             <Tr key={material.id}>
               <Td>
-                <MaterialDrawer {...material} />
+                <MaterialDetailsDrawer {...material} />
               </Td>
 
               <Td>
@@ -71,11 +71,11 @@ export default function MaterialsTable() {
               </Td>
               <Td fontSize='xs'>{material.vendor.name}</Td>
               <Td fontSize='xs'>
-                {material.categories.map((category) => (
-                  <Badge key={category.id} fontWeight='medium' px={2} py={1}>
-                    {category.name}
-                  </Badge>
-                ))}
+                <Flex mt={2} gap={2}>
+                  {material.categories.map((category) => (
+                    <CategoryBadge key={category.id} {...category} />
+                  ))}
+                </Flex>
               </Td>
             </Tr>
           ))}

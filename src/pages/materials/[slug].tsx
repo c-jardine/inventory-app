@@ -1,4 +1,4 @@
-import { MaterialDrawer, UpdateStockDrawer } from '@/features/material';
+import { MaterialDetailsDrawer, UpdateStockDrawer } from '@/features/material';
 import { db } from '@/server/db';
 import { poppins } from '@/styles/theme';
 import {
@@ -72,7 +72,7 @@ export default function Material(
           </InputGroup>
         </Flex>
         <Flex justifyContent='flex-end'>
-          {/* <MaterialsForm /> */}
+          {/* <MaterialFormDrawer /> */}
         </Flex>
       </SimpleGrid>
       <TableContainer overflowX='unset' overflowY='unset'>
@@ -96,7 +96,7 @@ export default function Material(
             {data.materials?.map((material) => (
               <Tr key={material.id}>
                 <Td>
-                  <MaterialDrawer {...material} />
+                  <MaterialDetailsDrawer {...material} />
                 </Td>
 
                 <Td>

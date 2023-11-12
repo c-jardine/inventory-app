@@ -1,5 +1,5 @@
 import { api } from '@/utils/api';
-import { Box, Link, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Box, Flex, Link, Stack } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -14,8 +14,13 @@ export default function RootLayout(props: RootLayoutProps) {
   const { data: categories } = api.category.getAll.useQuery();
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 5 }}>
-      <Box gridColumn={{ md: 1 }} h='100vh' bg='gray.800'>
+    <Flex flexDirection={{ base: 'column', lg: 'row' }}>
+      <Box
+        display={{ base: 'none', lg: 'block' }}
+        h='100vh'
+        w='250px'
+        bg='gray.800'
+      >
         <Stack color='white' p={8}>
           <Link as={NextLink} href='/materials'>
             Materials
@@ -54,7 +59,7 @@ export default function RootLayout(props: RootLayoutProps) {
           </Stack>
         </Stack>
       </Box>
-      <Box gridColumn={{ md: '2 / span 4' }}>{props.children}</Box>
-    </SimpleGrid>
+      <Box w='full'>{props.children}</Box>
+    </Flex>
   );
 }
