@@ -1,7 +1,6 @@
 import { api } from '@/utils/api';
 import {
   Badge,
-  Button,
   Circle,
   Flex,
   FormControl,
@@ -27,7 +26,6 @@ import { getTextColor } from '../helpers';
 import KFormLabel from './KFormLabel';
 
 const colors = [
-  'gray.50',
   'gray.100',
   'gray.200',
   'gray.300',
@@ -37,7 +35,6 @@ const colors = [
   'gray.700',
   'gray.800',
   'gray.900',
-  'red.50',
   'red.100',
   'red.200',
   'red.300',
@@ -47,7 +44,6 @@ const colors = [
   'red.700',
   'red.800',
   'red.900',
-  'orange.50',
   'orange.100',
   'orange.200',
   'orange.300',
@@ -57,7 +53,6 @@ const colors = [
   'orange.700',
   'orange.800',
   'orange.900',
-  'yellow.50',
   'yellow.100',
   'yellow.200',
   'yellow.300',
@@ -67,7 +62,6 @@ const colors = [
   'yellow.700',
   'yellow.800',
   'yellow.900',
-  'green.50',
   'green.100',
   'green.200',
   'green.300',
@@ -77,7 +71,6 @@ const colors = [
   'green.700',
   'green.800',
   'green.900',
-  'teal.50',
   'teal.100',
   'teal.200',
   'teal.300',
@@ -87,7 +80,6 @@ const colors = [
   'teal.700',
   'teal.800',
   'teal.900',
-  'blue.50',
   'blue.100',
   'blue.200',
   'blue.300',
@@ -97,7 +89,6 @@ const colors = [
   'blue.700',
   'blue.800',
   'blue.900',
-  'cyan.50',
   'cyan.100',
   'cyan.200',
   'cyan.300',
@@ -107,7 +98,6 @@ const colors = [
   'cyan.700',
   'cyan.800',
   'cyan.900',
-  'purple.50',
   'purple.100',
   'purple.200',
   'purple.300',
@@ -117,7 +107,6 @@ const colors = [
   'purple.700',
   'purple.800',
   'purple.900',
-  'pink.50',
   'pink.100',
   'pink.200',
   'pink.300',
@@ -145,10 +134,12 @@ export default function CategoryBadge(props: Category) {
 
   const utils = api.useUtils();
   const query = api.category.update.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await utils.material.getAll.invalidate();
       await utils.materialStockLog.getAllByMaterial.invalidate();
       await utils.category.getBySlug.invalidate();
+      await utils.category.getAll.invalidate();
+      form.reset({ name: data.name }, { keepDirty: false });
     },
   });
 
@@ -164,7 +155,7 @@ export default function CategoryBadge(props: Category) {
     <Popover>
       <PopoverTrigger>
         <Badge
-          as={Button}
+          as='button'
           bg={props.color}
           color={getTextColor(textColor)}
           fontWeight='normal'
@@ -181,7 +172,7 @@ export default function CategoryBadge(props: Category) {
           {props.name}
         </Badge>
       </PopoverTrigger>
-      <PopoverContent w={{ base: '100vw', sm: 'sm' }}>
+      <PopoverContent w={{ base: '100vw', sm: 'xs' }}>
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader py={4} fontSize='md'>
@@ -210,7 +201,7 @@ export default function CategoryBadge(props: Category) {
               </Flex>
             </FormControl>
           </form>
-          <SimpleGrid mt={4} columns={10} justifyContent='center' gap={2}>
+          <SimpleGrid mt={4} columns={9} justifyContent='center' gap={2}>
             {colors.map((color) => (
               <Circle
                 as='button'

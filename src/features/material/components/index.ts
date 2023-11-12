@@ -1,6 +1,8 @@
+export { default as Categories } from './Categories';
 export { default as CategoryInput } from './CategoryInput';
 export { default as MaterialDetails } from './MaterialDetails';
 export { default as MaterialDetailsDrawer } from './MaterialDetailsDrawer';
+export { default as MaterialDetailsEditForm } from './MaterialDetailsEditForm';
 export { default as MaterialDetailsHeader } from './MaterialDetailsHeader';
 export { default as MaterialForm } from './MaterialForm';
 export { default as MaterialFormDrawer } from './MaterialFormDrawer';

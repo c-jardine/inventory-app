@@ -12,7 +12,11 @@ export const materialRouter = createTRPCRouter({
       include: {
         stockUnit: true,
         vendor: true,
-        categories: true,
+        categories: {
+          orderBy: {
+            name: 'asc',
+          }
+        },
       },
     });
   }),

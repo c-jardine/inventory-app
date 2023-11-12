@@ -1,4 +1,3 @@
-import { CategoryBadge } from '@/core';
 import { api } from '@/utils/api';
 import {
   Flex,
@@ -12,6 +11,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import Categories from './Categories';
 import MaterialDetailsDrawer from './MaterialDetailsDrawer';
 import UpdateStockDrawer from './UpdateStockDrawer';
 
@@ -71,11 +71,7 @@ export default function MaterialsTable() {
               </Td>
               <Td fontSize='xs'>{material.vendor.name}</Td>
               <Td fontSize='xs'>
-                <Flex mt={2} gap={2}>
-                  {material.categories.map((category) => (
-                    <CategoryBadge key={category.id} {...category} />
-                  ))}
-                </Flex>
+                <Categories categories={material.categories} />
               </Td>
             </Tr>
           ))}
