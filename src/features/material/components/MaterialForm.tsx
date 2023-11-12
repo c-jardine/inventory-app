@@ -22,7 +22,7 @@ import VendorInput from './VendorInput';
 export default function MaterialForm({
   isEditing = false,
 }: {
-  isEditing: boolean;
+  isEditing?: boolean;
 }) {
   const form = useFormContext<MaterialFormType>();
 
