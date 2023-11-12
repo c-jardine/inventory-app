@@ -1,6 +1,7 @@
 import { api } from '@/utils/api';
 import {
   Badge,
+  Button,
   Circle,
   Flex,
   FormControl,
@@ -23,6 +24,7 @@ import { IconCheck } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { getTextColor } from '../helpers';
+import KFormLabel from './KFormLabel';
 
 const colors = [
   'gray.50',
@@ -162,6 +164,7 @@ export default function CategoryBadge(props: Category) {
     <Popover>
       <PopoverTrigger>
         <Badge
+          as={Button}
           bg={props.color}
           color={getTextColor(textColor)}
           fontWeight='normal'
@@ -181,7 +184,9 @@ export default function CategoryBadge(props: Category) {
       <PopoverContent w={{ base: '100vw', sm: 'sm' }}>
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader fontSize='md'>Edit category</PopoverHeader>
+        <PopoverHeader py={4} fontSize='md'>
+          Edit category
+        </PopoverHeader>
         <PopoverBody>
           <form
             id='test'
@@ -189,24 +194,27 @@ export default function CategoryBadge(props: Category) {
               console.error(data)
             )}
           >
-            <Flex alignItems='center' gap={2}>
-              <FormControl>
+            <FormControl>
+              <KFormLabel>Name</KFormLabel>
+              <Flex alignItems='center' gap={2}>
                 <Input {...form.register('name')} />
-              </FormControl>
-              <IconButton
-                icon={<Icon as={IconCheck} aria-label='Save category name' />}
-                aria-label='Save category name'
-                type='submit'
-                form='test'
-                px={0}
-                isDisabled={!form.formState.isDirty}
-                colorScheme={form.formState.isDirty ? 'green' : 'gray'}
-              />
-            </Flex>
+                <IconButton
+                  icon={<Icon as={IconCheck} aria-label='Save category name' />}
+                  aria-label='Save category name'
+                  type='submit'
+                  form='test'
+                  px={0}
+                  isDisabled={!form.formState.isDirty}
+                  colorScheme={form.formState.isDirty ? 'green' : 'gray'}
+                />
+              </Flex>
+            </FormControl>
           </form>
           <SimpleGrid mt={4} columns={10} justifyContent='center' gap={2}>
             {colors.map((color) => (
               <Circle
+                as='button'
+                aria-label={`Select color: ${color}`}
                 key={color}
                 size={6}
                 bg={color}
@@ -216,6 +224,9 @@ export default function CategoryBadge(props: Category) {
                 transition='200ms ease'
                 onClick={() => updateColor(color)}
                 _hover={{
+                  outlineColor: 'black',
+                }}
+                _focus={{
                   outlineColor: 'black',
                 }}
               />
