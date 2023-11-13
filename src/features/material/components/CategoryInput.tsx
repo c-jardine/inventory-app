@@ -1,4 +1,5 @@
-import { KFormLabel } from '@/core';
+import { KFormLabel, type SelectGroupOption, type SelectOption } from '@/core';
+import { chakraStyles } from '@/styles';
 import { api } from '@/utils/api';
 import {
   Box,
@@ -17,46 +18,23 @@ import { IconTrashXFilled } from '@tabler/icons-react';
 import {
   CreatableSelect,
   chakraComponents,
-  type GroupBase,
   type OptionProps,
 } from 'chakra-react-select';
-import { Controller, useFormContext } from 'react-hook-form';
-import { type MaterialFormType } from '../types';
+import { Controller } from 'react-hook-form';
+import { useCategories } from '../hooks';
 
-type CategoryOption = {
-  __isNew__?: boolean;
-  readonly label: string;
-  readonly value: string;
-};
-
+/**
+ * Input for selecting categories.
+ */
 export default function CategoryInput() {
-  const form = useFormContext<MaterialFormType>();
+  const { form, onCreate, categories } = useCategories();
 
-  const utils = api.useUtils();
-  const { data } = api.category.getAll.useQuery();
-  const createQuery = api.category.create.useMutation({
-    onSuccess: (data) => {
-      const prev = form.getValues('categories');
-      if (prev) {
-        form.setValue('categories', [...prev, data.name]);
-      } else {
-        form.setValue('categories', [data.name]);
-      }
-    },
-    onSettled: async () => {
-      await utils.category.getAll.invalidate();
-    },
-  });
-
-  function onCreate(name: string) {
-    createQuery.mutate({ name: name });
-  }
-
-  if (!data) {
+  if (!categories) {
     return <Spinner />;
   }
 
-  const categories = data.map((category) => ({
+  // Map categories into required format for the select input.
+  const categoriesData: SelectOption[] = categories.map((category) => ({
     label: category.name,
     value: category.name,
   }));
@@ -72,10 +50,10 @@ export default function CategoryInput() {
         control={form.control}
         name='categories'
         render={({ field }) => (
-          <CreatableSelect<CategoryOption, true>
+          <CreatableSelect<SelectOption, true, SelectGroupOption>
             {...field}
             isMulti
-            value={categories.filter((category) =>
+            value={categoriesData.filter((category) =>
               field.value?.includes(category.value)
             )}
             onChange={(selected) => {
@@ -95,66 +73,8 @@ export default function CategoryInput() {
                 left: 24,
               }),
             }}
-            chakraStyles={{
-              container: (base) => ({
-                ...base,
-                cursor: 'pointer',
-              }),
-              valueContainer: (base) => ({
-                ...base,
-                py: '0.625rem',
-              }),
-              menuList: (base) => ({
-                ...base,
-                rounded: 'lg',
-                p: 2,
-              }),
-              multiValueLabel: (base) => ({
-                ...base,
-                color: 'gray.600',
-                fontSize: 'xs',
-                transition: '200ms ease',
-                _groupHover: {
-                  color: 'black',
-                },
-              }),
-              groupHeading: (base) => ({
-                ...base,
-                fontSize: 'xs',
-                fontWeight: 'semibold',
-                color: 'gray.400',
-                textTransform: 'uppercase',
-                p: 2,
-                cursor: 'default',
-              }),
-              indicatorSeparator: (base) => ({
-                ...base,
-                display: 'none',
-              }),
-              dropdownIndicator: (base) => ({
-                ...base,
-                bg: 'transparent',
-                px: 2,
-                color: 'gray.500',
-                transition: '200ms ease',
-                _groupHover: {
-                  color: 'black',
-                },
-                _groupFocusWithin: {
-                  color: 'black',
-                },
-              }),
-              option: (base) => ({
-                ...base,
-                fontSize: 'sm',
-                rounded: 'md',
-                p: '0.75rem 1rem',
-                _selected: {
-                  bg: 'gray.200',
-                },
-              }),
-            }}
-            options={categories}
+            chakraStyles={chakraStyles}
+            options={categoriesData}
           />
         )}
       />
@@ -167,8 +87,12 @@ export default function CategoryInput() {
   );
 }
 
+/**
+ * Custom input for the select option.
+ * @param props The react-select option props (OptionProps).
+ */
 function CustomOption(
-  props: OptionProps<CategoryOption, true, GroupBase<CategoryOption>>
+  props: OptionProps<SelectOption, true, SelectGroupOption>
 ) {
   const utils = api.useUtils();
   const query = api.category.delete.useMutation({

@@ -14,7 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { IconCurrencyDollar } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
-import { type MaterialFormType } from '../types';
+
+import { type CreateMaterialFormType } from '../schema';
 import CategoryInput from './CategoryInput';
 import StockUnitInput from './StockUnitInput';
 import VendorInput from './VendorInput';
@@ -24,7 +25,7 @@ export default function MaterialForm({
 }: {
   isEditing?: boolean;
 }) {
-  const form = useFormContext<MaterialFormType>();
+  const form = useFormContext<CreateMaterialFormType>();
 
   return (
     <Stack spacing={5}>

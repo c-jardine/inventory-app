@@ -12,7 +12,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import Categories from './Categories';
-import MaterialDetailsDrawer from './MaterialDetailsDrawer';
+import MaterialDrawer from './MaterialDrawer';
 import UpdateStockDrawer from './UpdateStockDrawer';
 
 export default function MaterialsTable() {
@@ -52,7 +52,7 @@ export default function MaterialsTable() {
           {data.map((material) => (
             <Tr key={material.id}>
               <Td>
-                <MaterialDetailsDrawer {...material} />
+                <MaterialDrawer {...material} />
               </Td>
 
               <Td>

@@ -1,12 +1,7 @@
-import { isMoreThanXDaysAway } from '@/core';
-import { poppins } from '@/styles/theme';
 import {
   Box,
   Button,
-  Circle,
   DrawerBody,
-  Flex,
-  Heading,
   Icon,
   Link,
   SimpleGrid,
@@ -14,23 +9,34 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { IconExternalLink } from '@tabler/icons-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import React from 'react';
 import { type MaterialFullType } from '../types';
 import MaterialLogs from './MaterialLogs';
 import MaterialOptionsMenu from './MaterialOptionsMenu';
 
-export default function MaterialDetails(
-  props: MaterialFullType & {
+type MaterialDetailsProps = MaterialFullType & {
+  editingState: {
     isEditing: boolean;
-    onEdit: (val: boolean) => void;
-  }
-) {
-  if (props.isEditing) {
-    return <></>;
+    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+};
+
+/**
+ * The individual details drawer content for a material.
+ * @param props The material data,
+ */
+export default function MaterialDetails(props: MaterialDetailsProps) {
+  const { editingState } = props;
+
+  /**
+   * Set the isEditing state to true.
+   */
+  function onEdit() {
+    editingState.setIsEditing(true);
   }
 
   return (
-    <DrawerBody>
+    <DrawerBody display={editingState.isEditing ? 'none' : 'block'}>
       <Stack spacing={4}>
         <SimpleGrid columns={3}>
           <Box fontSize='sm'>
@@ -87,65 +93,13 @@ export default function MaterialDetails(
         </Box>
       </Stack>
       <Stack direction='row' spacing={4} mt={8}>
-        <Button
-          variant='outline'
-          w='fit-content'
-          onClick={() => props.onEdit(true)}
-        >
+        <Button variant='outline' w='fit-content' onClick={onEdit}>
           Edit Details
         </Button>
         <MaterialOptionsMenu {...props} />
       </Stack>
-      <Stack spacing={4} mt={8}>
-        <Heading
-          as='h2'
-          pb={2}
-          fontFamily={poppins.style.fontFamily}
-          fontSize='lg'
-          borderBottomWidth={1}
-        >
-          History
-        </Heading>
-        <Box>
-          <MaterialLogs {...props} />
-          <Flex role='group' cursor='pointer' gap={4}>
-            <Box mt={3}>
-              <Circle
-                position='relative'
-                size={3}
-                bg='gray.400'
-                borderWidth={1.5}
-                borderColor='white'
-                transition='250ms ease'
-                _groupHover={{
-                  bg: 'orange.400',
-                }}
-              />
-            </Box>
-            <Box
-              w='full'
-              mb={4}
-              p={2}
-              rounded='xl'
-              transition='250ms ease'
-              outline='1px solid transparent'
-              _groupHover={{
-                outlineColor: 'var(--chakra-colors-gray-200)',
-                bg: 'gray.100',
-              }}
-            >
-              <Text fontSize='sm' fontWeight='semibold'>
-                Material created
-              </Text>
-              <Text fontSize='xs' color='gray.500'>
-                {isMoreThanXDaysAway(7, props.createdAt)
-                  ? format(props.createdAt, "LLL d, yyyy 'at' h:mm aaa")
-                  : `${formatDistanceToNow(props.createdAt)} ago`}
-              </Text>
-            </Box>
-          </Flex>
-        </Box>
-      </Stack>
+
+      <MaterialLogs {...props} />
     </DrawerBody>
   );
 }

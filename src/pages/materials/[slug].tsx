@@ -1,4 +1,4 @@
-import { MaterialDetailsDrawer, UpdateStockDrawer } from '@/features/material';
+import { MaterialDrawer, UpdateStockDrawer } from '@/features/material';
 import { db } from '@/server/db';
 import { poppins } from '@/styles/theme';
 import {
@@ -96,7 +96,7 @@ export default function Material(
             {data.materials?.map((material) => (
               <Tr key={material.id}>
                 <Td>
-                  <MaterialDetailsDrawer {...material} />
+                  <MaterialDrawer {...material} />
                 </Td>
 
                 <Td>

@@ -8,9 +8,9 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { type Material } from '@prisma/client';
 import { type inferRouterOutputs } from '@trpc/server';
 import React from 'react';
+import { isLowStock } from '../utils';
 import UpdateStockForm from './UpdateStockForm';
 
 export default function UpdateStockDrawer(
@@ -19,10 +19,6 @@ export default function UpdateStockDrawer(
   const btnRef = React.useRef(null);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-
-  function isLowStock(material: Material) {
-    return Number(material.stock) < Number(material.minStock);
-  }
 
   return (
     <>

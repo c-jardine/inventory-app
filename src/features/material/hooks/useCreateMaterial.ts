@@ -2,10 +2,9 @@ import { api } from '@/utils/api';
 import { useToast } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { materialSchema } from '../schema';
-import { type MaterialFormType } from '../types';
+import { createMaterialSchema, type CreateMaterialFormType } from '../schema';
 
-const defaultValues: MaterialFormType = {
+const defaultValues: CreateMaterialFormType = {
   name: '',
   url: undefined,
   stock: 0,
@@ -16,17 +15,25 @@ const defaultValues: MaterialFormType = {
   categories: [],
 };
 
+/**
+ * React hook used to create a new material.
+ * @param onSuccess Optional callback fired when the creation is successful.
+ * @param onError Optional callback fired when the creation fails.
+ * @returns The form methods and onSubmit handler.
+ */
 export default function useCreateMaterial(
   onSuccess?: () => void | Promise<void>,
   onError?: () => void | Promise<void>
 ) {
-  const form = useForm<MaterialFormType>({
-    defaultValues,
-    resolver: zodResolver(materialSchema),
-  });
-
   const toast = useToast();
 
+  // The form methods.
+  const form = useForm<CreateMaterialFormType>({
+    defaultValues,
+    resolver: zodResolver(createMaterialSchema),
+  });
+
+  // The query and utils.
   const utils = api.useUtils();
   const query = api.material.create.useMutation({
     onSuccess: async (data) => {
@@ -42,7 +49,11 @@ export default function useCreateMaterial(
     onError: onError,
   });
 
-  function onSubmit(data: MaterialFormType) {
+  /**
+   * The onSubmit handler.
+   * @param data The material data.
+   */
+  function onSubmit(data: CreateMaterialFormType) {
     query.mutate(data);
   }
 

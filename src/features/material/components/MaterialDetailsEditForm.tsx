@@ -1,88 +1,65 @@
-import { api } from '@/utils/api';
-import { Button, DrawerBody, DrawerFooter, useToast } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
-import { materialSchema } from '../schema';
-import { type MaterialFormType, type MaterialFullType } from '../types';
+import { Button, DrawerBody, DrawerFooter } from '@chakra-ui/react';
+import React from 'react';
+import { FormProvider } from 'react-hook-form';
+import { useUpdateMaterial } from '../hooks';
+import { type MaterialFullType } from '../types';
 import MaterialForm from './MaterialForm';
-
+/**
+ * The edit form for a material used inside the drawer..
+ * @param props
+ * @returns
+ */
 export default function MaterialDetailsEditForm(
   props: MaterialFullType & {
-    isEditing: boolean;
-    setIsEditing: (val: boolean) => void;
+    editingState: {
+      isEditing: boolean;
+      setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+    };
   }
 ) {
-  const form = useForm<MaterialFormType>({
-    defaultValues: {
-      ...props,
-      url: props.url ?? '',
-      stock: Number(props.stock),
-      minStock: Number(props.minStock),
-      costPerUnit: Number(props.costPerUnit),
-      stockUnit: props.stockUnit.namePlural,
-      vendor: props.vendor.name,
-      categories: props.categories.map((category) => category.name),
-    },
-    resolver: zodResolver(materialSchema),
+  const { editingState, ...material } = props;
+  const { form, onSubmit } = useUpdateMaterial(material, () => {
+    editingState.setIsEditing(false);
   });
 
-  const toast = useToast();
-
-  const utils = api.useUtils();
-  const query = api.material.update.useMutation({
-    onSuccess: async (data) => {
-      toast({
-        title: data.name,
-        description: `Material successfully updated.`,
-        status: 'success',
-      });
-      props.setIsEditing(false);
-      await utils.material.getAll.invalidate();
-    },
-  });
-
-  function handleSave(data: MaterialFormType) {
-    query.mutate({ id: props.id, ...data });
-  }
-
-  function handleCancelEdit() {
+  /**
+   * Set the isEdiitng state to false. If the form has been changed, alert the
+   * user before canceling.
+   */
+  function onCancel() {
     if (!form.formState.isDirty) {
-      props.setIsEditing(false);
+      editingState.setIsEditing(false);
     } else if (
       confirm('Are you sure you want to go back? All changes will be lost.')
     ) {
-      props.setIsEditing(false);
+      editingState.setIsEditing(false);
       form.reset(
         {
-          name: props.name,
-          url: props.url ?? '',
-          stock: Number(props.stock),
-          minStock: Number(props.minStock),
-          costPerUnit: Number(props.costPerUnit),
+          name: material.name,
+          url: material.url ?? '',
+          stock: Number(material.stock),
+          minStock: Number(material.minStock),
+          costPerUnit: Number(material.costPerUnit),
         },
         { keepValues: false, keepDirty: false }
       );
     }
   }
 
-  if (!props.isEditing) {
-    return <></>;
-  }
-
   return (
     <>
-      <DrawerBody>
+      <DrawerBody display={editingState.isEditing ? 'block' : 'none'}>
         <FormProvider {...form}>
           <form
             id={`update-${props.name}-form`}
-            onSubmit={form.handleSubmit(handleSave)}
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <MaterialForm isEditing />
           </form>
         </FormProvider>
       </DrawerBody>
       <DrawerFooter gap={4}>
-        <Button onClick={handleCancelEdit}>Cancel</Button>
+        <Button onClick={onCancel}>Cancel</Button>
         <Button
           form={`update-${props.name}-form`}
           type='submit'

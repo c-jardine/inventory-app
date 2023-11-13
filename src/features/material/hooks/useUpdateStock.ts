@@ -1,3 +1,4 @@
+import { type SelectOption } from '@/core';
 import { type AppRouter } from '@/server/api/root';
 import { api } from '@/utils/api';
 import { useToast } from '@chakra-ui/react';
@@ -5,54 +6,50 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type inferRouterOutputs } from '@trpc/server';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { updateStockSchema, type UpdateStockFormType } from '../schema';
 
-const schema = z.object({
-  logType: z.union([
-    z.literal('Supply Order'),
-    z.literal('Audit'),
-    z.literal('Product Testing'),
-  ]),
-  stock: z.number(),
-  notes: z.string().optional(),
-});
-
-export type StockLogTypeOption = {
-  readonly label: z.infer<typeof schema>['logType'];
-  readonly value: z.infer<typeof schema>['logType'];
-};
-
-export type UpdateStockFormType = z.infer<typeof schema>;
-
+/**
+ * React hook used to update a material's stock.
+ * @param onSuccess Optional callback fired when the creation is successful.
+ * @param onError Optional callback fired when the creation fails.
+ * @returns The form methods, onSubmit handler, and list of log types..
+ */
 export default function useUpdateStock(
   material: inferRouterOutputs<AppRouter>['material']['getAll'][0],
   onSuccess?: () => void | Promise<void>,
   onError?: () => void | Promise<void>
 ) {
-  const form = useForm<UpdateStockFormType>({ resolver: zodResolver(schema) });
+  const toast = useToast();
+
+  // The form methods.
+  const form = useForm<UpdateStockFormType>({
+    resolver: zodResolver(updateStockSchema),
+  });
   const { resetField } = form;
 
+  // The log types query.
   const { data: logTypes } = api.materialStockLogType.getAll.useQuery();
 
-  const [types, setTypes] = React.useState<StockLogTypeOption[]>([]);
+  // Handle resetting the select input data once the log types load.
+  const [types, setTypes] = React.useState<SelectOption[]>([]);
   React.useEffect(() => {
     if (logTypes) {
       setTypes(
         logTypes?.map((type) => ({
-          label: type.name as z.infer<typeof schema>['logType'],
-          value: type.name as z.infer<typeof schema>['logType'],
+          label: type.name,
+          value: type.name,
         }))
       );
       logTypes[0] &&
         resetField('logType', {
-          defaultValue: logTypes[0].name as z.infer<typeof schema>['logType'],
+          defaultValue: logTypes[0].name as UpdateStockFormType['logType'],
           keepDirty: false,
         });
     }
   }, [resetField, logTypes]);
 
-  const toast = useToast();
-
+  // The create log query and utils. A new log is created when the stock is
+  // updated.
   const utils = api.useUtils();
   const query = api.materialStockLog.create.useMutation({
     onSuccess: async () => {
@@ -69,6 +66,10 @@ export default function useUpdateStock(
     onError,
   });
 
+  /**
+   * The onSubmit handler.
+   * @param data The stock form data.
+   */
   function onSubmit(data: UpdateStockFormType) {
     query.mutate({
       ...data,

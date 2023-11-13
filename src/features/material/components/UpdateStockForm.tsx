@@ -1,5 +1,5 @@
-import { KFormLabel } from '@/core';
-import { type AppRouter } from '@/server/api/root';
+import { KFormLabel, type SelectGroupOption, type SelectOption } from '@/core';
+import { chakraStyles } from '@/styles';
 import {
   Button,
   DrawerBody,
@@ -13,27 +13,24 @@ import {
   Stack,
   Textarea,
   chakra,
+  type UseDisclosureProps,
 } from '@chakra-ui/react';
 import { IconArrowRight } from '@tabler/icons-react';
-import { type inferRouterOutputs } from '@trpc/server';
 import { Select } from 'chakra-react-select';
 import { Controller } from 'react-hook-form';
 import { useUpdateStock } from '../hooks';
-import { type StockLogTypeOption } from '../hooks/useUpdateStock';
-import { getStockLabel, getStockLevel } from '../utils';
+import { type UpdateStockFormType } from '../schema';
+import { type GetAllMaterialsResult } from '../types';
+import { getMaterialLogTypeLabel, getUpdatedStockLevel } from '../utils';
 
-type GroupOption = {
-  readonly label: string;
-  readonly options: readonly StockLogTypeOption[];
+type UpdateStockFormProps = GetAllMaterialsResult[0] & {
+  onClose: UseDisclosureProps['onClose'];
 };
 
-export default function UpdateStockForm(
-  props: inferRouterOutputs<AppRouter>['material']['getAll'][0] & {
-    onClose: () => void;
-  }
-) {
+export default function UpdateStockForm(props: UpdateStockFormProps) {
   const { onClose, ...material } = props;
   const { form, onSubmit, types } = useUpdateStock(material, onClose);
+
   return (
     <>
       <DrawerBody>
@@ -48,60 +45,18 @@ export default function UpdateStockForm(
                 control={form.control}
                 name='logType'
                 render={({ field }) => (
-                  <Select<StockLogTypeOption, false, GroupOption>
+                  <Select<SelectOption, false, SelectGroupOption>
                     {...field}
-                    chakraStyles={{
-                      container: (base) => ({
-                        ...base,
-                        cursor: 'pointer',
-                      }),
-                      valueContainer: (base) => ({
-                        ...base,
-                        py: '0.625rem',
-                      }),
-                      menuList: (base) => ({
-                        ...base,
-                        rounded: 'lg',
-                        p: 2,
-                      }),
-                      groupHeading: (base) => ({
-                        ...base,
-                        fontSize: 'xs',
-                        fontWeight: 'semibold',
-                        color: 'gray.400',
-                        textTransform: 'uppercase',
-                        p: 2,
-                        cursor: 'default',
-                      }),
-                      indicatorSeparator: (base) => ({
-                        ...base,
-                        display: 'none',
-                      }),
-                      dropdownIndicator: (base) => ({
-                        ...base,
-                        bg: 'transparent',
-                        px: 2,
-                        color: 'gray.500',
-                        transition: '200ms ease',
-                        _groupHover: {
-                          color: 'black',
-                        },
-                        _groupFocusWithin: {
-                          color: 'black',
-                        },
-                      }),
-                      option: (base) => ({
-                        ...base,
-                        fontSize: 'sm',
-                        rounded: 'md',
-                      }),
-                    }}
+                    chakraStyles={chakraStyles}
                     options={types}
                     value={types.find((type) => type.value === field.value)}
                     onChange={(data) => {
                       if (data) {
                         field.onChange(data.value);
-                        form.setValue('logType', data.value);
+                        form.setValue(
+                          'logType',
+                          data.value as UpdateStockFormType['logType']
+                        );
                       }
                     }}
                   />
@@ -114,7 +69,9 @@ export default function UpdateStockForm(
               )}
             </FormControl>
             <FormControl isInvalid={!!form.formState.errors.stock}>
-              <KFormLabel>{getStockLabel(form.watch('logType'))}</KFormLabel>
+              <KFormLabel>
+                {getMaterialLogTypeLabel(form.watch('logType'))}
+              </KFormLabel>
               <NumberInput>
                 <NumberInputField
                   placeholder='0'
@@ -136,7 +93,7 @@ export default function UpdateStockForm(
                 </chakra.span>
                 <Icon as={IconArrowRight} />
                 {!isNaN(form.watch('stock')) &&
-                  getStockLevel(
+                  getUpdatedStockLevel(
                     form.watch('logType'),
                     Number(material.stock),
                     form.watch('stock')

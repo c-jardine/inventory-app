@@ -5,26 +5,30 @@ import {
   DrawerOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-import { type Material } from '@prisma/client';
 import React from 'react';
 import { type MaterialFullType } from '../types';
+import { isLowStock } from '../utils';
 import MaterialDetails from './MaterialDetails';
 import MaterialDetailsEditForm from './MaterialDetailsEditForm';
 import MaterialDetailsHeader from './MaterialDetailsHeader';
 
-export default function MaterialDetailsDrawer(props: MaterialFullType) {
+/**
+ * The drawer for an individual material.
+ * @param props The material data.
+ */
+export default function MaterialDrawer(props: MaterialFullType) {
+  // State to handle which content is shown. The editing form is shown if true,
+  // otherwise the details section is shown.
   const [isEditing, setIsEditing] = React.useState(false);
-  const btnRef = React.useRef(null);
 
+  // For configuring the drawer.
+  const btnRef = React.useRef(null);
   const { isOpen, onClose, onOpen } = useDisclosure({
     onClose: () => {
+      // Reset drawer to details section when onClose fires.
       setIsEditing(false);
     },
   });
-
-  function isLowStock(material: Material) {
-    return Number(material.stock) < Number(material.minStock);
-  }
 
   return (
     <>
@@ -55,13 +59,14 @@ export default function MaterialDetailsDrawer(props: MaterialFullType) {
           <MaterialDetailsHeader {...props} />
           <MaterialDetails
             {...props}
-            isEditing={isEditing}
-            onEdit={() => setIsEditing(true)}
+            editingState={{
+              isEditing,
+              setIsEditing,
+            }}
           />
           <MaterialDetailsEditForm
             {...props}
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
+            editingState={{ isEditing, setIsEditing }}
           />
         </DrawerContent>
       </Drawer>
