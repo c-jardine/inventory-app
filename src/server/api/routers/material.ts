@@ -49,7 +49,8 @@ export const materialRouter = createTRPCRouter({
   update: publicProcedure
     .input(updateMaterialSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, name, url, vendor, categories } = input;
+      const { id, name, minStock, url, vendor, categories } = input;
+      const min = minStock !== "" ? minStock : undefined;
       return ctx.db.$transaction([
         // Remove all categories.
         ctx.db.material.update({
@@ -67,6 +68,7 @@ export const materialRouter = createTRPCRouter({
           data: {
             name,
             url,
+            minStock: min,
             vendor: {
               connect: {
                 name: vendor,

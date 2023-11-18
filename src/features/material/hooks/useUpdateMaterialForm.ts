@@ -18,7 +18,7 @@ export default function useUpdateMaterialForm(material: MaterialFullType) {
     url: material.url ?? '',
     stock: material.stock.toString(),
     stockUnit: material.stockUnit.namePlural,
-    minStock: material.minStock.toString(),
+    minStock: material.minStock ? material.minStock.toString() : undefined,
     costPerUnit: Number(material.costPerUnit),
     vendor: material.vendor.name,
     categories: material.categories.map((category) => category.name),
