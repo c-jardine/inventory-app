@@ -1,4 +1,9 @@
-import { KFormLabel, type SelectGroupOption, type SelectOption } from '@/core';
+import {
+  KFormLabel,
+  NumberStepper,
+  type SelectGroupOption,
+  type SelectOption,
+} from '@/core';
 import { chakraStyles } from '@/styles';
 import {
   Button,
@@ -72,12 +77,17 @@ export default function UpdateStockForm(props: UpdateStockFormProps) {
               <KFormLabel>
                 {getMaterialLogTypeLabel(form.watch('logType'))}
               </KFormLabel>
-              <NumberInput>
-                <NumberInputField
-                  placeholder='0'
-                  {...form.register('stock', { valueAsNumber: true })}
-                />
-              </NumberInput>
+              <Controller
+                name='stock'
+                control={form.control}
+                render={({ field: { ref, ...rest } }) => (
+                  <NumberInput {...rest} min={0}>
+                    <NumberInputField ref={ref} name={rest.name} />
+                    <NumberStepper />
+                  </NumberInput>
+                )}
+              />
+
               <FormHelperText
                 display='flex'
                 alignItems='center'
@@ -92,12 +102,11 @@ export default function UpdateStockForm(props: UpdateStockFormProps) {
                     : props.stockUnit.abbreviationPlural}
                 </chakra.span>
                 <Icon as={IconArrowRight} />
-                {!isNaN(form.watch('stock')) &&
-                  getUpdatedStockLevel(
-                    form.watch('logType'),
-                    Number(material.stock),
-                    form.watch('stock')
-                  )}{' '}
+                {getUpdatedStockLevel(
+                  form.watch('logType'),
+                  Number(material.stock),
+                  Number(form.watch('stock'))
+                )}{' '}
                 {Number(props.stock) === 1
                   ? props.stockUnit.abbreviationSingular
                   : props.stockUnit.abbreviationPlural}

@@ -7,9 +7,9 @@ import { createMaterialSchema, type CreateMaterialFormType } from '../schema';
 const defaultValues: CreateMaterialFormType = {
   name: '',
   url: undefined,
-  stock: 0,
+  stock: '0',
   stockUnit: '',
-  minStock: 0,
+  minStock: '0',
   costPerUnit: 0,
   vendor: '',
   categories: [],
@@ -51,6 +51,7 @@ export default function useNewMaterialDrawer() {
    */
   function onSubmit(data: CreateMaterialFormType) {
     query.mutate(data);
+    disclosure.onClose();
   }
 
   return { disclosure, form, onSubmit };

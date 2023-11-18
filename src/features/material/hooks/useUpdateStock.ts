@@ -23,6 +23,9 @@ export default function useUpdateStock(
 
   // The form methods.
   const form = useForm<UpdateStockFormType>({
+    defaultValues: {
+      stock: '0',
+    },
     resolver: zodResolver(updateStockSchema),
   });
   const { resetField } = form;

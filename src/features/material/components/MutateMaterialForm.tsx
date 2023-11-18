@@ -13,7 +13,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { IconCurrencyDollar } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { useMaterialDrawerContext } from '../hooks';
 import { type CreateMaterialFormType } from '../schema';
@@ -25,7 +25,7 @@ import VendorInput from './VendorInput';
  * A form for creating and editing materials.
  */
 export default function MutateMaterialForm() {
-  const { isEditing } = useMaterialDrawerContext();
+  const context = useMaterialDrawerContext();
 
   const form = useFormContext<CreateMaterialFormType>();
 
@@ -57,16 +57,16 @@ export default function MutateMaterialForm() {
           gridColumn='1 / span 3'
         >
           <KFormLabel>Total stock</KFormLabel>
-          <NumberInput min={0}>
-            <NumberInputField
-              {...form.register('stock', { valueAsNumber: true })}
-              disabled={isEditing}
-              _disabled={{
-                bg: 'gray.100',
-              }}
-            />
-            {!isEditing && <NumberStepper />}
-          </NumberInput>
+          <Controller
+            name='stock'
+            control={form.control}
+            render={({ field: { ref, ...rest } }) => (
+              <NumberInput {...rest} min={0}>
+                <NumberInputField ref={ref} name={rest.name} />
+                {context.screen === 'DETAILS' && <NumberStepper />}
+              </NumberInput>
+            )}
+          />
           {form.formState.errors.stock && (
             <FormErrorMessage>
               {form.formState.errors.stock.message}
@@ -78,31 +78,35 @@ export default function MutateMaterialForm() {
 
       <FormControl isInvalid={!!form.formState.errors.minStock}>
         <KFormLabel>Minimum Stock</KFormLabel>
-        <NumberInput position='relative' min={0}>
-          <NumberInputField
-            {...form.register('minStock', { valueAsNumber: true })}
-          />
-          <NumberStepper />
-          <Badge
-            position='absolute'
-            top='50%'
-            right={4}
-            transform='translateY(-50%)'
-            transition='100ms ease'
-            fontWeight='medium'
-            _groupHover={{
-              transform: 'translateY(-50%) translateX(-1.5rem)',
-            }}
-            _groupFocusWithin={{
-              transform: 'translateY(-50%) translateX(-1.5rem)',
-            }}
-            _groupActive={{
-              transform: 'translateY(-50%) translateX(-1.5rem)',
-            }}
-          >
-            {form.watch('stockUnit')}
-          </Badge>
-        </NumberInput>
+        <Controller
+          name='minStock'
+          control={form.control}
+          render={({ field: { ref, ...rest } }) => (
+            <NumberInput {...rest} position='relative' min={0}>
+              <NumberInputField ref={ref} name={rest.name} />
+              <NumberStepper />
+              <Badge
+                position='absolute'
+                top='50%'
+                right={4}
+                transform='translateY(-50%)'
+                transition='100ms ease'
+                fontWeight='medium'
+                _groupHover={{
+                  transform: 'translateY(-50%) translateX(-1.5rem)',
+                }}
+                _groupFocusWithin={{
+                  transform: 'translateY(-50%) translateX(-1.5rem)',
+                }}
+                _groupActive={{
+                  transform: 'translateY(-50%) translateX(-1.5rem)',
+                }}
+              >
+                {form.watch('stockUnit')}
+              </Badge>
+            </NumberInput>
+          )}
+        />
         {form.formState.errors.minStock && (
           <FormErrorMessage>
             {form.formState.errors.minStock.message}
@@ -120,7 +124,7 @@ export default function MutateMaterialForm() {
           <NumberInput w='full'>
             <NumberInputField
               {...form.register('costPerUnit', { valueAsNumber: true })}
-              disabled={isEditing}
+              disabled={context.screen === 'EDIT'}
               pl={8}
               _disabled={{
                 bg: 'gray.100',

@@ -10,18 +10,9 @@ export const createMaterialSchema = z.object({
     z.string().url(Validation.VALID_URL).optional(),
     z.literal(''),
   ]),
-  stock: z
-    .number({ invalid_type_error: Validation.REQUIRED })
-    .min(0, Validation.NOT_NEGATIVE),
+  stock: z.string({ invalid_type_error: Validation.REQUIRED }),
   stockUnit: z.string(),
-  minStock: z
-    .union([
-      z
-        .number({ invalid_type_error: Validation.REQUIRED })
-        .min(0, Validation.NOT_NEGATIVE),
-      z.nan(),
-    ])
-    .optional(),
+  minStock: z.string().optional(),
   costPerUnit: z
     .number({ invalid_type_error: Validation.REQUIRED })
     .min(0, Validation.NOT_NEGATIVE),
@@ -57,7 +48,7 @@ export const updateStockSchema = z.object({
     z.literal('Audit'),
     z.literal('Product Testing'),
   ]),
-  stock: z.number(),
+  stock: z.string(),
   notes: z.string().optional(),
 });
 
