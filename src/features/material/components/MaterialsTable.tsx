@@ -62,12 +62,12 @@ export default function MaterialsTable() {
               <Td fontSize='xs'>
                 {Number(material.minStock)}{' '}
                 {Number(material.minStock) === 1
-                  ? material.stockUnit.nameSingular
-                  : material.stockUnit.namePlural}
+                  ? material.stockUnit.abbreviationSingular
+                  : material.stockUnit.abbreviationPlural}
               </Td>
               <Td fontSize='xs'>
                 ${Number(material.costPerUnit)} /
-                {material.stockUnit.nameSingular}
+                {material.stockUnit.abbreviationSingular}
               </Td>
               <Td fontSize='xs'>{material.vendor.name}</Td>
               <Td fontSize='xs'>

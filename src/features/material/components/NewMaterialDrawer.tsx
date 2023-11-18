@@ -8,36 +8,47 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Icon,
-  useDisclosure,
+  type ButtonProps,
 } from '@chakra-ui/react';
 import { IconPlus } from '@tabler/icons-react';
 import React from 'react';
 import { FormProvider } from 'react-hook-form';
-import { useCreateMaterial } from '../hooks';
-import MaterialForm from './MaterialForm';
+import { MaterialDrawerContextProvider } from '../contexts';
+import { useNewMaterialDrawer } from '../hooks';
+import NewMaterialForm from './NewMaterialForm';
 
-export default function MaterialFormDrawer() {
-  const { isOpen, onOpen, onClose } = useDisclosure({
-    onClose: () => form.reset(),
-  });
-  const { form, onSubmit } = useCreateMaterial(onClose);
+type NewMaterialDrawerProps = {
+  triggerStyles?: ButtonProps;
+};
 
-  const btnRef = React.useRef(null);
+/**
+ * The drawer that shows when creating a new component.
+ */
+export default function NewMaterialDrawer(props: NewMaterialDrawerProps) {
+  // Ref for the drawer trigger so it can be refocused on closing.
+  const drawerTriggerRef = React.useRef(null);
+
+  const {
+    disclosure: { isOpen, onOpen, onClose },
+    form,
+    onSubmit,
+  } = useNewMaterialDrawer();
 
   return (
     <>
       <Button
-        ref={btnRef}
+        ref={drawerTriggerRef}
         onClick={onOpen}
         colorScheme='blue'
         leftIcon={<Icon as={IconPlus} w={4} h={4} />}
+        {...props.triggerStyles}
       >
         Create new
       </Button>
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        finalFocusRef={btnRef}
+        finalFocusRef={drawerTriggerRef}
         placement='right'
         size='md'
       >
@@ -48,7 +59,9 @@ export default function MaterialFormDrawer() {
               <DrawerCloseButton />
               <DrawerHeader>Create new material</DrawerHeader>
               <DrawerBody>
-                <MaterialForm />
+                <MaterialDrawerContextProvider>
+                  <NewMaterialForm />
+                </MaterialDrawerContextProvider>
               </DrawerBody>
               <DrawerFooter>
                 <Button type='submit' colorScheme='green'>

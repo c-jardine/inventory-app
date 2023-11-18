@@ -38,8 +38,8 @@ export default function UpdateStockDrawer(
       >
         {Number(props.stock)}{' '}
         {Number(props.stock) === 1
-          ? props.stockUnit.nameSingular
-          : props.stockUnit.namePlural}
+          ? props.stockUnit.abbreviationSingular
+          : props.stockUnit.abbreviationPlural}
       </Button>
       <Drawer
         isOpen={isOpen}

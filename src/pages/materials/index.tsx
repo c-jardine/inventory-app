@@ -1,4 +1,7 @@
-import { MaterialFormDrawer, MaterialsTable } from '@/features/material';
+import {
+  MaterialsTable,
+  NewMaterialDrawer,
+} from '@/features/material/components';
 import { poppins } from '@/styles/theme';
 import {
   Container,
@@ -36,9 +39,11 @@ export default function Materials() {
             <Input placeholder='Search' />
           </InputGroup>
         </Flex>
-        <Flex justifyContent='flex-end'>
-          <MaterialFormDrawer />
-        </Flex>
+        <NewMaterialDrawer
+          triggerStyles={{
+            justifySelf: 'flex-end',
+          }}
+        />
       </SimpleGrid>
       <MaterialsTable />
     </Container>

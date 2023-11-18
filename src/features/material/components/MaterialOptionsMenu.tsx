@@ -1,4 +1,3 @@
-import { type AppRouter } from '@/server/api/root';
 import { api } from '@/utils/api';
 import {
   Button,
@@ -9,11 +8,9 @@ import {
   MenuList,
 } from '@chakra-ui/react';
 import { IconDots, IconTrash } from '@tabler/icons-react';
-import { type inferRouterOutputs } from '@trpc/server';
+import { type MaterialFullType } from '../types';
 
-export default function MaterialOptionsMenu(
-  props: inferRouterOutputs<AppRouter>['material']['getAll'][0]
-) {
+export default function MaterialOptionsMenu(props: MaterialFullType) {
   const deleteQuery = api.material.delete.useMutation();
 
   function onDelete() {

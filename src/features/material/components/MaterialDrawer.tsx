@@ -6,11 +6,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
+import { MaterialDrawerContextProvider } from '../contexts';
 import { type MaterialFullType } from '../types';
 import { isLowStock } from '../utils';
 import MaterialDetails from './MaterialDetails';
-import MaterialDetailsEditForm from './MaterialDetailsEditForm';
 import MaterialDetailsHeader from './MaterialDetailsHeader';
+import UpdateMaterialForm from './UpdateMaterialForm';
 
 /**
  * The drawer for an individual material.
@@ -19,14 +20,13 @@ import MaterialDetailsHeader from './MaterialDetailsHeader';
 export default function MaterialDrawer(props: MaterialFullType) {
   // State to handle which content is shown. The editing form is shown if true,
   // otherwise the details section is shown.
-  const [isEditing, setIsEditing] = React.useState(false);
 
   // For configuring the drawer.
   const btnRef = React.useRef(null);
   const { isOpen, onClose, onOpen } = useDisclosure({
     onClose: () => {
       // Reset drawer to details section when onClose fires.
-      setIsEditing(false);
+      // setIsEditing(false);
     },
   });
 
@@ -57,17 +57,10 @@ export default function MaterialDrawer(props: MaterialFullType) {
         <DrawerOverlay />
         <DrawerContent>
           <MaterialDetailsHeader {...props} />
-          <MaterialDetails
-            {...props}
-            editingState={{
-              isEditing,
-              setIsEditing,
-            }}
-          />
-          <MaterialDetailsEditForm
-            {...props}
-            editingState={{ isEditing, setIsEditing }}
-          />
+          <MaterialDrawerContextProvider>
+            <MaterialDetails {...props} />
+            <UpdateMaterialForm {...props} />
+          </MaterialDrawerContextProvider>
         </DrawerContent>
       </Drawer>
     </>

@@ -2,7 +2,7 @@ import { KFormLabel } from '@/core';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { Controller, useFormContext } from 'react-hook-form';
-import { CreateMaterialFormType } from '../schema';
+import { type CreateMaterialFormType } from '../schema';
 
 type UnitOption = {
   readonly label: string;

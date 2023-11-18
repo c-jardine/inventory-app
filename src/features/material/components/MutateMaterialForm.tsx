@@ -15,16 +15,18 @@ import {
 import { IconCurrencyDollar } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
 
+import { useMaterialDrawerContext } from '../hooks';
 import { type CreateMaterialFormType } from '../schema';
 import CategoryInput from './CategoryInput';
 import StockUnitInput from './StockUnitInput';
 import VendorInput from './VendorInput';
 
-export default function MaterialForm({
-  isEditing = false,
-}: {
-  isEditing?: boolean;
-}) {
+/**
+ * A form for creating and editing materials.
+ */
+export default function MutateMaterialForm() {
+  const { isEditing } = useMaterialDrawerContext();
+
   const form = useFormContext<CreateMaterialFormType>();
 
   return (

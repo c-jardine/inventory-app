@@ -9,34 +9,27 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { IconExternalLink } from '@tabler/icons-react';
-import React from 'react';
+import { useMaterialDrawerContext } from '../hooks';
 import { type MaterialFullType } from '../types';
 import MaterialLogs from './MaterialLogs';
 import MaterialOptionsMenu from './MaterialOptionsMenu';
-
-type MaterialDetailsProps = MaterialFullType & {
-  editingState: {
-    isEditing: boolean;
-    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  };
-};
 
 /**
  * The individual details drawer content for a material.
  * @param props The material data,
  */
-export default function MaterialDetails(props: MaterialDetailsProps) {
-  const { editingState } = props;
+export default function MaterialDetails(props: MaterialFullType) {
+  const { screen, setScreen } = useMaterialDrawerContext();
 
   /**
    * Set the isEditing state to true.
    */
   function onEdit() {
-    editingState.setIsEditing(true);
+    setScreen('EDIT');
   }
 
   return (
-    <DrawerBody display={editingState.isEditing ? 'none' : 'block'}>
+    <DrawerBody display={screen === 'DETAILS' ? 'block' : 'none'}>
       <Stack spacing={4}>
         <SimpleGrid columns={3}>
           <Box fontSize='sm'>

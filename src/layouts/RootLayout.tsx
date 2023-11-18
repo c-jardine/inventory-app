@@ -18,7 +18,7 @@ export default function RootLayout(props: RootLayoutProps) {
       <Box
         display={{ base: 'none', lg: 'block' }}
         h='100vh'
-        w='250px'
+        w='xs'
         bg='gray.800'
       >
         <Stack color='white' p={8}>
