@@ -1,4 +1,7 @@
-import { MaterialDrawer, UpdateStockDrawer } from '@/features/material';
+import {
+  MaterialDrawer,
+  UpdateStockDrawer,
+} from '@/features/material/components';
 import { db } from '@/server/db';
 import { poppins } from '@/styles/theme';
 import {
@@ -71,9 +74,7 @@ export default function Material(
             <Input placeholder='Search' />
           </InputGroup>
         </Flex>
-        <Flex justifyContent='flex-end'>
-          {/* <MaterialFormDrawer /> */}
-        </Flex>
+        <Flex justifyContent='flex-end'>{/* <MaterialFormDrawer /> */}</Flex>
       </SimpleGrid>
       <TableContainer overflowX='unset' overflowY='unset'>
         <Table size='sm'>
