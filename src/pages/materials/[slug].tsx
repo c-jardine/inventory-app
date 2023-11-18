@@ -29,6 +29,7 @@ import {
   type GetStaticPropsContext,
   type InferGetStaticPropsType,
 } from 'next';
+import Head from 'next/head';
 
 export default function Material(
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -52,82 +53,101 @@ export default function Material(
   };
 
   return (
-    <Container maxW='container.xl' p={{ base: 4, sm: 8 }}>
-      <SimpleGrid
-        gridTemplateColumns={{ base: '1fr', lg: '1fr 1fr 1fr' }}
-        mb={8}
-        alignItems='center'
-      >
-        <Heading
-          as='h1'
-          fontFamily={poppins.style.fontFamily}
-          fontSize='2xl'
-          fontWeight='semibold'
-        >
-          Materials
-        </Heading>
-        <Flex p={4}>
-          <InputGroup>
-            <InputLeftElement pointerEvents='none' h='full'>
-              <Icon as={IconSearch} w={4} h={4} />
-            </InputLeftElement>
-            <Input placeholder='Search' />
-          </InputGroup>
-        </Flex>
-        <Flex justifyContent='flex-end'>{/* <MaterialFormDrawer /> */}</Flex>
-      </SimpleGrid>
-      <TableContainer overflowX='unset' overflowY='unset'>
-        <Table size='sm'>
-          <Thead
-            position='sticky'
-            top={0}
-            zIndex='docked'
-            bg='linear-gradient(180deg, white 0%, white 99%, var(--chakra-colors-gray-200) 99%, var(--chakra-colors-gray-200) 100%)'
+    <>
+      <Head>
+        <title>{category.name} | Inventory Tracker</title>
+        <meta
+          name='description'
+          content='An inventory tracking app handling stock levels, pricing, production runs, and more.'
+        />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <main>
+        <Container maxW='container.xl' p={{ base: 4, sm: 8 }}>
+          <SimpleGrid
+            gridTemplateColumns={{ base: '1fr', lg: '1fr 1fr 1fr' }}
+            mb={8}
+            alignItems='center'
           >
-            <Tr>
-              <Th py={2}>Name</Th>
-              <Th>Stock Level</Th>
-              <Th>Min Level</Th>
-              <Th>Cost</Th>
-              <Th>Vendor</Th>
-              <Th>Category</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.materials?.map((material) => (
-              <Tr key={material.id}>
-                <Td>
-                  <MaterialDrawer {...material} />
-                </Td>
+            <Heading
+              as='h1'
+              fontFamily={poppins.style.fontFamily}
+              fontSize='2xl'
+              fontWeight='semibold'
+            >
+              Materials
+            </Heading>
+            <Flex p={4}>
+              <InputGroup>
+                <InputLeftElement pointerEvents='none' h='full'>
+                  <Icon as={IconSearch} w={4} h={4} />
+                </InputLeftElement>
+                <Input placeholder='Search' />
+              </InputGroup>
+            </Flex>
+            <Flex justifyContent='flex-end'>
+              {/* <MaterialFormDrawer /> */}
+            </Flex>
+          </SimpleGrid>
+          <TableContainer overflowX='unset' overflowY='unset'>
+            <Table size='sm'>
+              <Thead
+                position='sticky'
+                top={0}
+                zIndex='docked'
+                bg='linear-gradient(180deg, white 0%, white 99%, var(--chakra-colors-gray-200) 99%, var(--chakra-colors-gray-200) 100%)'
+              >
+                <Tr>
+                  <Th py={2}>Name</Th>
+                  <Th>Stock Level</Th>
+                  <Th>Min Level</Th>
+                  <Th>Cost</Th>
+                  <Th>Vendor</Th>
+                  <Th>Category</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {data.materials?.map((material) => (
+                  <Tr key={material.id}>
+                    <Td>
+                      <MaterialDrawer {...material} />
+                    </Td>
 
-                <Td>
-                  <UpdateStockDrawer {...material} />
-                </Td>
+                    <Td>
+                      <UpdateStockDrawer {...material} />
+                    </Td>
 
-                <Td fontSize='xs'>
-                  {Number(material.minStock)}{' '}
-                  {Number(material.minStock) === 1
-                    ? material.stockUnit.nameSingular
-                    : material.stockUnit.namePlural}
-                </Td>
-                <Td fontSize='xs'>
-                  ${Number(material.costPerUnit)} /
-                  {material.stockUnit.nameSingular}
-                </Td>
-                <Td fontSize='xs'>{material.vendor.name}</Td>
-                <Td fontSize='xs'>
-                  {material.categories.map((category) => (
-                    <Badge key={category.id} fontWeight='medium' px={2} py={1}>
-                      {category.name}
-                    </Badge>
-                  ))}
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-    </Container>
+                    <Td fontSize='xs'>
+                      {Number(material.minStock)}{' '}
+                      {Number(material.minStock) === 1
+                        ? material.stockUnit.nameSingular
+                        : material.stockUnit.namePlural}
+                    </Td>
+                    <Td fontSize='xs'>
+                      ${Number(material.costPerUnit)} /
+                      {material.stockUnit.nameSingular}
+                    </Td>
+                    <Td fontSize='xs'>{material.vendor.name}</Td>
+                    <Td fontSize='xs'>
+                      {material.categories.map((category) => (
+                        <Badge
+                          key={category.id}
+                          fontWeight='medium'
+                          px={2}
+                          py={1}
+                        >
+                          {category.name}
+                        </Badge>
+                      ))}
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Container>
+      </main>
+    </>
   );
 }
 
