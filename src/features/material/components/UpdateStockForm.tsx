@@ -41,7 +41,7 @@ export default function UpdateStockForm(props: UpdateStockFormProps) {
       <DrawerBody>
         <form
           id={`update-stock-${material.id}-form`}
-          onSubmit={form.handleSubmit(onSubmit, (data) => console.error(data))}
+          onSubmit={form.handleSubmit(onSubmit)}
         >
           <Stack spacing={4}>
             <FormControl isInvalid={!!form.formState.errors.logType}>

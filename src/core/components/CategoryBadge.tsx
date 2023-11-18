@@ -179,12 +179,7 @@ export default function CategoryBadge(props: Category) {
           Edit category
         </PopoverHeader>
         <PopoverBody>
-          <form
-            id='test'
-            onSubmit={form.handleSubmit(updateName, (data) =>
-              console.error(data)
-            )}
-          >
+          <form id='test' onSubmit={form.handleSubmit(updateName)}>
             <FormControl>
               <KFormLabel>Name</KFormLabel>
               <Flex alignItems='center' gap={2}>
