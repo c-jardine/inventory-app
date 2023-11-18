@@ -3,6 +3,7 @@ import {
   NewMaterialDrawer,
 } from '@/features/material/components';
 import { poppins } from '@/styles/theme';
+import { api } from '@/utils/api';
 import {
   Container,
   Flex,
@@ -12,11 +13,27 @@ import {
   InputGroup,
   InputLeftElement,
   SimpleGrid,
+  Spinner,
+  Text,
 } from '@chakra-ui/react';
 import { IconSearch } from '@tabler/icons-react';
 import Head from 'next/head';
 
 export default function Materials() {
+  const { data, isLoading } = api.material.getAll.useQuery();
+
+  if (isLoading) {
+    return (
+      <Flex py={8} justifyContent='center'>
+        <Spinner />
+      </Flex>
+    );
+  }
+
+  if (!data) {
+    return <Text>No materials to show.</Text>;
+  }
+
   return (
     <>
       <Head>
@@ -56,7 +73,7 @@ export default function Materials() {
               }}
             />
           </SimpleGrid>
-          <MaterialsTable />
+          <MaterialsTable materials={data} />
         </Container>
       </main>
     </>

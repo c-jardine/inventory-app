@@ -1,34 +1,23 @@
-import { api } from '@/utils/api';
 import {
-  Flex,
-  Spinner,
   Table,
   TableContainer,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { type MaterialFullType } from '../types';
 import Categories from './Categories';
 import MaterialDrawer from './MaterialDrawer';
 import UpdateStockDrawer from './UpdateStockDrawer';
 
-export default function MaterialsTable() {
-  const { data, isLoading } = api.material.getAll.useQuery();
+type MaterialsTableProps = {
+  materials: MaterialFullType[];
+};
 
-  if (isLoading) {
-    return (
-      <Flex py={8} justifyContent='center'>
-        <Spinner />
-      </Flex>
-    );
-  }
-
-  if (!data) {
-    return <Text>No materials to show.</Text>;
-  }
+export default function MaterialsTable(props: MaterialsTableProps) {
+  const { materials } = props;
 
   return (
     <TableContainer overflowX='scroll' overflowY='unset'>
@@ -49,7 +38,7 @@ export default function MaterialsTable() {
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((material) => (
+          {materials.map((material) => (
             <Tr key={material.id}>
               <Td>
                 <MaterialDrawer {...material} />
