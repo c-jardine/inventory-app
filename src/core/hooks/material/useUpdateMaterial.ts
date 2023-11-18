@@ -16,6 +16,7 @@ export default function useUpdateMaterial(queryOptions: UpdateMaterialOptions) {
     ...queryOptions,
     onSuccess: async (data, variables, context) => {
       await utils.material.getAll.invalidate();
+      await utils.category.getBySlug.invalidate();
       if (queryOptions.onSuccess) {
         queryOptions.onSuccess(data, variables, context);
       }
