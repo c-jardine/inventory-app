@@ -35,9 +35,9 @@ export const updateMaterialSchema = createMaterialSchema.merge(
 );
 
 /**
- * Type of createMaterialSchema.
+ * Type of updateMaterialSchema.
  */
-export type UpdateMaterialFormType = z.infer<typeof createMaterialSchema>;
+export type UpdateMaterialFormType = z.infer<typeof updateMaterialSchema>;
 
 /**
  * Update material stock schema.

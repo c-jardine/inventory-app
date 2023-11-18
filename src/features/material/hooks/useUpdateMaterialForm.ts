@@ -13,13 +13,13 @@ import useMaterialDrawerContext from './useMaterialDrawerContext';
  * @returns The form methods and onSubmit handler.
  */
 export default function useUpdateMaterialForm(material: MaterialFullType) {
-  const defaultValues = {
+  const defaultValues: UpdateMaterialFormType = {
     ...material,
     url: material.url ?? '',
-    stock: Number(material.stock),
-    minStock: Number(material.minStock),
-    costPerUnit: Number(material.costPerUnit),
+    stock: material.stock.toString(),
     stockUnit: material.stockUnit.namePlural,
+    minStock: material.minStock.toString(),
+    costPerUnit: Number(material.costPerUnit),
     vendor: material.vendor.name,
     categories: material.categories.map((category) => category.name),
   };
@@ -36,17 +36,19 @@ export default function useUpdateMaterialForm(material: MaterialFullType) {
   const query = useUpdateMaterial({
     onSuccess: (data) => {
       toast({
-        title: data.name,
+        title: data[0].name,
         description: `Material successfully updated.`,
         status: 'success',
       });
-      /**
-       * TODO: Not working properly. Ideally, we'll change forms to use the id
-       * for relational fields.
-       */
-      form.reset(undefined, { keepDirty: false });
+      // Go back to the details pane.
       context.setScreen('DETAILS');
+
+      // Reset the form. Without keepDirtyValues set to true, going back to the
+      // form will use the previous initially rendered value. Basically, this
+      // just lets the form act the way the user would expect.
+      form.reset(defaultValues, { keepDirty: false, keepDirtyValues: true });
     },
+    onError: (e) => console.log('AHHH', e),
   });
 
   /**
@@ -54,7 +56,7 @@ export default function useUpdateMaterialForm(material: MaterialFullType) {
    * @param data The new material data.
    */
   function onSubmit(data: UpdateMaterialFormType) {
-    query.mutate({ id: material.id, ...data });
+    query.mutate({ ...data });
   }
 
   /**
@@ -68,16 +70,7 @@ export default function useUpdateMaterialForm(material: MaterialFullType) {
       confirm('Are you sure you want to go back? All changes will be lost.')
     ) {
       context.setScreen('DETAILS');
-      form.reset(
-        {
-          name: material.name,
-          url: material.url ?? '',
-          stock: Number(material.stock),
-          minStock: Number(material.minStock),
-          costPerUnit: Number(material.costPerUnit),
-        },
-        { keepValues: false, keepDirty: false }
-      );
+      form.reset(defaultValues, { keepDirty: false, keepDirtyValues: false });
     }
   }
 

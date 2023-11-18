@@ -49,28 +49,35 @@ export const materialRouter = createTRPCRouter({
   update: publicProcedure
     .input(updateMaterialSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, ...rest } = input;
-      return ctx.db.material.update({
-        where: {
-          id: id,
-        },
-        data: {
-          ...rest,
-          stockUnit: {
-            connect: {
-              namePlural: rest.stockUnit,
+      const { id, name, url, vendor, categories } = input;
+      return ctx.db.$transaction([
+        // Remove all categories.
+        ctx.db.material.update({
+          where: { id },
+          data: {
+            categories: {
+              set: [],
             },
           },
-          vendor: {
-            connect: {
-              name: rest.vendor,
+        }),
+        ctx.db.material.update({
+          where: {
+            id,
+          },
+          data: {
+            name,
+            url,
+            vendor: {
+              connect: {
+                name: vendor,
+              },
+            },
+            categories: {
+              connect: categories?.map((category) => ({ name: category })),
             },
           },
-          categories: {
-            connect: rest.categories?.map((category) => ({ name: category })),
-          },
-        },
-      });
+        }),
+      ]);
     }),
   delete: publicProcedure
     .input(deleteMaterialSchema)

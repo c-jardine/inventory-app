@@ -14,9 +14,11 @@ export default function useUpdateMaterial(queryOptions: UpdateMaterialOptions) {
   const utils = api.useUtils();
   const query = api.material.update.useMutation({
     ...queryOptions,
-    onSuccess: async () => {
+    onSuccess: async (data, variables, context) => {
       await utils.material.getAll.invalidate();
-      queryOptions.onSuccess;
+      if (queryOptions.onSuccess) {
+        queryOptions.onSuccess(data, variables, context);
+      }
     },
   });
 

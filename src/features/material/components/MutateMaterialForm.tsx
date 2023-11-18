@@ -52,7 +52,7 @@ export default function MutateMaterialForm() {
 
       <SimpleGrid columns={5} gap={4}>
         <FormControl
-          isRequired
+          isRequired={context.screen === 'DETAILS'}
           isInvalid={!!form.formState.errors.stock}
           gridColumn='1 / span 3'
         >
@@ -62,7 +62,14 @@ export default function MutateMaterialForm() {
             control={form.control}
             render={({ field: { ref, ...rest } }) => (
               <NumberInput {...rest} min={0}>
-                <NumberInputField ref={ref} name={rest.name} />
+                <NumberInputField
+                  ref={ref}
+                  name={rest.name}
+                  disabled={context.screen === 'EDIT'}
+                  _disabled={{
+                    bg: 'gray.100',
+                  }}
+                />
                 {context.screen === 'DETAILS' && <NumberStepper />}
               </NumberInput>
             )}
@@ -114,7 +121,10 @@ export default function MutateMaterialForm() {
         )}
       </FormControl>
 
-      <FormControl isRequired isInvalid={!!form.formState.errors.costPerUnit}>
+      <FormControl
+        isRequired={context.screen === 'DETAILS'}
+        isInvalid={!!form.formState.errors.costPerUnit}
+      >
         <KFormLabel>Cost per Unit</KFormLabel>
 
         <InputGroup>
